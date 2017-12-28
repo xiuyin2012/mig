@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.clo.dao.RolePermisMapper">  
+  <select id="findRoles"  parameterType="role" resultType="role">
+  
+       <if test="page != 0">
+        SELECT * FROM
+          ( 
+            SELECT A.*, ROWNUM RN
+            FROM (
+        </if>
+        select role_id,role_name,role_desc from sys_role where 1=1
+        <if test="role_name!=null">
+            and role_name = #{role_name}
+        </if>
+      <if test="page != 0">
+         <![CDATA[
+            ) A
+            WHERE ROWNUM <= #{page} * #{rows}
+          )
+        WHERE RN >= ( #{page} - 1) * #{rows} + 1
+         ]]> 
+         </if>
+  </select>
+
+<select id="findRecords" parameterType="role" resultType="int" >
+    select count(1)  from sys_role
+    <if test="role_name!=null and role_name!=''">
+         and role_name = #{role_name}
+    </if>
+</select>
+
+<select id="upateRole" parameterType = "role">
+    update  sys_role  set role_name = #{role_name},role_desc=#{role_desc}
+    <if test="menu_ids!=null and menu_ids!=''">
+        ,menu_ids=#{menu_ids}
+    </if>
+    where role_id = #{role_id}
+</select>
+
+<insert id="addRole"  parameterType = "role">
+  <selectKey keyProperty="role_id" order="BEFORE" resultType="int">
+    select sys_role_seq.nextval from dual
+  </selectKey>
+    insert into sys_role (role_id,role_name,role_desc) values(#{role_id},#{role_name},#{role_desc})
+</insert>
+
+<delete id="deleteRole" parameterType = "role">
+    delete from sys_role where role_id = #{role_id}
+</delete>
+<select id="getRoleById" parameterType = "int" resultType = "role">
+    select  role_id,role_name,role_desc,menu_ids from sys_role where role_id = #{role_id}
+</select>
+<select id="selectMenuIdsByUserId" parameterType = "String" resultType="role">
+select menu_ids from sys_role where role_id in (select role_id from sys_user where user_id = #{user_id});
+</select>
+<!-- <insert id="addRoleRefMenu" parameterType="roleRefMenu">
+  <selectKey keyProperty="ref_id" order="BEFORE" resultType="int">
+    select role_ref_menu_seq.nextval from dual
+  </selectKey>
+    insert into role_ref_menu (ref_id,role_id,menu_id) values(#{ref_id},#{role_id},#{menu_id})
+</insert>
+<update id="updateRoleRefMenu" parameterType="roleRefMenu">
+    update role_ref_menu set role_id
+</update>
+<select id="">
+</select>
+role_ref_menu(ref_id number not null primary key,role_id varchar2(10),menu_id varchar2(10)) -->
+</mapper>

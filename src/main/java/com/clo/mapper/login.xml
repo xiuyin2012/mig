@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.clo.dao.SysUserMapper">
+  <select id="findSysUser" resultType="sysUser" parameterType="String">
+      select user_id,user_pwd,role_id,is_super from sys_user where user_id=#{user_id}
+  </select>
+  <select id="getSysUser" resultType = "sysUser" parameterType = "sysUser">
+      select user_id,user_pwd,role_id,is_super 
+      from sys_user 
+      where 1=1
+      <if test="null!=user_id and user_id!=''">
+          and user_id = #{user_id}
+      </if>
+      <if test="null!=role_id and role_id!=''">
+          and role_id = #{role_id}
+      </if>
+  </select>
+  <insert id="addSysUserConfig" parameterType = "sysUser">
+      insert into sys_user(user_id,user_pwd,is_super) values(#{user_id},#{user_pwd},#{is_super})
+  </insert>
+  <update id="updateSysUserConfig" parameterType = "sysUser">
+      update sys_user set user_pwd = #{user_pwd}
+      <if test="is_super and is_super !=''">
+      ,is_super= #{is_super}
+      </if>
+       where user_id = #{user_id}
+  </update>
+  <update id="updateSysUser" parameterType = "sysUser">
+      update sys_user set role_id = #{role_id} where user_id = #{user_id} 
+  </update>
+  <delete id="delSysUser" parameterType = "sysUser">
+      delete from sys_user where user_id = #{user_id}
+  </delete>
+  </mapper>

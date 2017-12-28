@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.clo.dao.MenuMapper">  
+  <select id="findMenus"  parameterType="menu" resultType="menu">
+  
+  <if test="page != 0">
+        SELECT * FROM
+          ( 
+            SELECT A.*, ROWNUM RN
+            FROM (
+        </if>
+        select menu_id,menu_name,menu_url,menu_para_nm,menu_para,level_status,super_level  from menu_config where 1=1
+        <if test="menu_name!=null">
+            and menu_name = #{menu_name}
+        </if>
+        <if test="super_level!=null">
+             and super_level = #{super_level}
+        </if>
+        order by menu_id asc
+      <if test="page != 0">
+         <![CDATA[
+            ) A
+          )
+        WHERE RN <= #{page} * #{rows} and RN >= ( #{page} - 1) * #{rows} + 1
+         ]]> 
+         </if>
+  </select>
+
+<select id="findRecords" parameterType="menu" resultType="int" >
+    select count(1)  from menu_config
+    <if test="menu_name!=null and menu_name!=''">
+         and menu_name = #{menu_name}
+    </if>
+</select>
+
+<select id="upateMenu" parameterType = "menu">
+    update  menu_config  set menu_name = #{menu_name},menu_url=#{menu_url},menu_para_nm= #{menu_para_nm},menu_para= #{menu_para},level_status= #{level_status},
+            super_level = #{super_level}
+    where menu_id = #{menu_id}
+</select>
+
+<insert id="addMenu"  parameterType = "menu">
+  <selectKey keyProperty="menu_id" order="BEFORE" resultType="int">
+    select menu_config_seq.nextval from dual
+  </selectKey>
+    insert into menu_config (menu_id,menu_name,menu_url,menu_para_nm,menu_para,level_status,super_level) values(#{menu_id},#{menu_name},#{menu_url},#{menu_para_nm},#{menu_para},#{level_status},#{super_level})
+</insert>
+
+<delete id="deleteMenu" parameterType = "menu">
+    delete from menu_config where menu_id = #{menu_id}
+</delete>
+
+<select id="findSuperMenus" resultType="menu">
+select menu_id,menu_name from menu_config where level_status = '1' order by menu_id asc
+</select>
+<select id="findMenuTree" resultType="menuTree">
+select menu_id id,to_number(super_level) pId,menu_name name from menu_config order by menu_id asc
+</select>
+</mapper>

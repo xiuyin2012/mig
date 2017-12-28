@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="mig:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="mig.war">
+      <element id="artifact" artifact-name="mig:war exploded" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<typeAliases>  
+  <typeAlias type="com.clo.model.User" alias="user" />
+  <typeAlias type="com.clo.model.AppServerMonitor" alias = "appServerMonitor" />
+  <typeAlias type="com.clo.domain.AppServerCondition" alias = "appServer" />
+  <typeAlias type="com.clo.model.CmKpiEw" alias = "cmKpiEw"/>
+</typeAliases>
+<mappers>
+  <mapper resource="com/clo/mapper/user.xml" />
+  <mapper resource = "com/clo/mapper/appServerMonitor.xml" />
+  <mapper resource = "com/clo/mapper/cmKpiEw.xml" />
+</mappers>
+</configuration>
