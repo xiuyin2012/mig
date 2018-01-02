@@ -37,14 +37,14 @@
 </style>
  <body style="overflow-x:hidden;background:white;">
     <div id = "lmenu" class="lmenu">  
-    <ul id="ult">
+    <!--<ul id="ult">
                 <li id="lit" style="background:white;" aid="analysis/getAnalysisTender.do?"> 
                 <em id="emt" class="iconleaf"></em> 
                 <span id="spant" style ="border:1px solid white; background:#4682B4;color: white;"> <em class="icoopen"></em>   
                                                        充值累计统计及趋势
                 </span>
                 </li>
-    </ul>
+    </ul>-->
     <ul>
                 <li style="background:white;" aid="<c:out value='${childmenu.menu_url }'/>"  para_nm="<c:out value='${childmenu.menu_para_nm }'/>" para="<c:out value='${childmenu.menu_para }'/>"> 
                 <em class="iconleaf"></em>
