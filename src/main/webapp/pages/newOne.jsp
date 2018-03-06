@@ -36,6 +36,67 @@
 
 </body>
 <script type="text/javascript">
+    $(function() {
+        $.ajax({
 
+            type:"POST",
+            async:false,
+            url:"<c:url value='/analysis/geTransByPro.do'/>",
+            data:{},
+            dataType:"json",
+            success:function(data){
+                //ewJsonData = data;
+            }
+        });
+
+        $.ajax({
+
+            type:"POST",
+            async:false,
+            url:"<c:url value='/analysis/ratioByGameBET.do'/>",
+            data:{},
+            dataType:"json",
+            success:function(data){
+                //ewJsonData = data;
+            }
+        });
+
+        $.ajax({
+
+            type:"POST",
+            async:false,
+            url:"<c:url value='/analysis/getTotalBETbyScore.do'/>",
+            data:{},
+            dataType:"json",
+            success:function(data){
+                //ewJsonData = data;
+            }
+        });
+
+        $.ajax({
+
+            type:"POST",
+            async:false,
+            url:"<c:url value='/analysis/getHallListByAmount.do'/>",
+            data:{},
+            dataType:"json",
+            success:function(data){
+                //ewJsonData = data;
+            }
+        });
+
+        $.ajax({
+
+            type:"POST",
+            async:false,
+            url:"<c:url value='/analysis/getFinalAmount.do'/>",
+            data:{},
+            dataType:"json",
+            success:function(data){
+                //ewJsonData = data;
+            }
+        });
+
+    });
 </script>
 </html>
