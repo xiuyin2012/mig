@@ -3,30 +3,32 @@ package com.clo.util;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+//import java.util.logging.Logger;
 
 import javax.security.auth.Destroyable;
 
+import org.apache.log4j.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 public class JedisUtil {
 
+	Logger logger = Logger.getLogger(JedisUtil.class);
 	private static String JEDIS_IP;
 	private static int JEDIS_PORT;
 	private static String JEDIS_PASSWORD;
 	// private static String JEDIS_SLAVE;
 
 	private static JedisPool jedisPool;
-
+    private static JedisPoolConfig config;
 	static {
 		// Configuration conf = Configuration.getInstance();
-		JEDIS_IP = "192.168.213.128";
+		JEDIS_IP = "172.18.60.119";
 		JEDIS_PORT = 6379;
 		JEDIS_PASSWORD = "";
-		JedisPoolConfig config = new JedisPoolConfig();
+		config = new JedisPoolConfig();
 		// config.setMaxActive(5000);
-		config.setMaxIdle(256);// 20
 		// config.setMaxWait(5000L);
 		config.setTestOnBorrow(true);
 		config.setTestOnReturn(true);
@@ -34,11 +36,15 @@ public class JedisUtil {
 		config.setMinEvictableIdleTimeMillis(60000l);
 		config.setTimeBetweenEvictionRunsMillis(3000l);
 		config.setNumTestsPerEvictionRun(-1);
-		jedisPool = new JedisPool(config, JEDIS_IP, JEDIS_PORT, 60000);
-	}
 
+        config.setMaxWaitMillis(10 * 1000);
+        config.setMaxIdle(1000);
+
+    }
+
+	Jedis jedis = null;
 	/**
-	 * »ñÈ¡Êı¾İ
+	 * ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param key
 	 * @return
@@ -51,15 +57,54 @@ public class JedisUtil {
 			jedis = jedisPool.getResource();
 			value = jedis.get(key);
 		} catch (Exception e) {
-			// ÊÍ·Åredis¶ÔÏó
+			// ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 			jedisPool.returnBrokenResource(jedis);
 			e.printStackTrace();
 		} finally {
-			// ·µ»¹µ½Á¬½Ó³Ø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
 			close(jedis);
 		}
 
 		return value;
+	}
+
+	/**
+	 * åŒæ­¥è·å–Jediså®ä¾‹
+	 * @return Jedis
+	 */
+	public synchronized Jedis getJedis() {
+
+		Jedis jedis = null;
+
+		try {
+			jedisPool = new JedisPool(config, JEDIS_IP, JEDIS_PORT, 60000);
+			if (jedisPool != null) {
+				jedis = jedisPool.getResource();
+			}
+		} catch (Exception e) {
+			logger.error("Get jedis error : "+e);
+			e.printStackTrace();
+		}finally{
+			jedisPool.returnResourceObject(jedis);
+		}
+		return jedis;
+	}
+
+	/**
+	 * è·å–list
+	 * @param
+	 * @param key
+	 * @return list
+	 */
+	public List<String> getList(String key){
+		if(getJedis() == null || !getJedis().exists(key.getBytes())){
+			return null;
+		}
+		List<String> list = getJedis().lrange("lofts",0,-1);
+		logger.info("lofts==============="+list.get(0));
+		System.out.println("lofts============"+list.get(0));
+		//List<T> list = (List<T>) ObjectTranscoder.deserialize(in);
+		return list;
 	}
 
 	public static void close(Jedis jedis) {
@@ -75,7 +120,7 @@ public class JedisUtil {
 	}
 
 	/**
-	 * »ñÈ¡Êı¾İ
+	 * ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param key
 	 * @return
@@ -88,11 +133,11 @@ public class JedisUtil {
 			jedis = jedisPool.getResource();
 			value = jedis.get(key);
 		} catch (Exception e) {
-			// ÊÍ·Åredis¶ÔÏó
+			// ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 			jedisPool.returnBrokenResource(jedis);
 			e.printStackTrace();
 		} finally {
-			// ·µ»¹µ½Á¬½Ó³Ø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
 			close(jedis);
 		}
 
@@ -106,11 +151,11 @@ public class JedisUtil {
 			jedis = jedisPool.getResource();
 			jedis.set(key, value);
 		} catch (Exception e) {
-			// ÊÍ·Åredis¶ÔÏó
+			// ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 			jedisPool.returnBrokenResource(jedis);
 			e.printStackTrace();
 		} finally {
-			// ·µ»¹µ½Á¬½Ó³Ø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
 			close(jedis);
 		}
 	}
@@ -123,11 +168,11 @@ public class JedisUtil {
 			jedis.set(key, value);
 			jedis.expire(key, time);
 		} catch (Exception e) {
-			// ÊÍ·Åredis¶ÔÏó
+			// ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 			jedisPool.returnBrokenResource(jedis);
 			e.printStackTrace();
 		} finally {
-			// ·µ»¹µ½Á¬½Ó³Ø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
 			close(jedis);
 		}
 	}
@@ -138,11 +183,11 @@ public class JedisUtil {
 			jedis = jedisPool.getResource();
 			jedis.hset(key, field, value);
 		} catch (Exception e) {
-			// ÊÍ·Åredis¶ÔÏó
+			// ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 			jedisPool.returnBrokenResource(jedis);
 			e.printStackTrace();
 		} finally {
-			// ·µ»¹µ½Á¬½Ó³Ø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
 			close(jedis);
 		}
 	}
@@ -153,17 +198,17 @@ public class JedisUtil {
 			jedis = jedisPool.getResource();
 			jedis.hset(key, field, value);
 		} catch (Exception e) {
-			// ÊÍ·Åredis¶ÔÏó
+			// ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 			jedisPool.returnBrokenResource(jedis);
 			e.printStackTrace();
 		} finally {
-			// ·µ»¹µ½Á¬½Ó³Ø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
 			close(jedis);
 		}
 	}
 
 	/**
-	 * »ñÈ¡Êı¾İ
+	 * ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param key
 	 * @return
@@ -176,11 +221,11 @@ public class JedisUtil {
 			jedis = jedisPool.getResource();
 			value = jedis.hget(key, field);
 		} catch (Exception e) {
-			// ÊÍ·Åredis¶ÔÏó
+			// ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 			jedisPool.returnBrokenResource(jedis);
 			e.printStackTrace();
 		} finally {
-			// ·µ»¹µ½Á¬½Ó³Ø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
 			close(jedis);
 		}
 
@@ -188,7 +233,7 @@ public class JedisUtil {
 	}
 
 	/**
-	 * »ñÈ¡Êı¾İ
+	 * ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param key
 	 * @return
@@ -201,11 +246,11 @@ public class JedisUtil {
 			jedis = jedisPool.getResource();
 			value = jedis.hget(key, field);
 		} catch (Exception e) {
-			// ÊÍ·Åredis¶ÔÏó
+			// ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 			jedisPool.returnBrokenResource(jedis);
 			e.printStackTrace();
 		} finally {
-			// ·µ»¹µ½Á¬½Ó³Ø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
 			close(jedis);
 		}
 
@@ -219,20 +264,17 @@ public class JedisUtil {
 			jedis = jedisPool.getResource();
 			jedis.hdel(key, field);
 		} catch (Exception e) {
-			// ÊÍ·Åredis¶ÔÏó
+			// ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 			jedisPool.returnBrokenResource(jedis);
 			e.printStackTrace();
 		} finally {
-			// ·µ»¹µ½Á¬½Ó³Ø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
 			close(jedis);
 		}
 	}
 
 	/**
-	 * ´æ´¢REDIS¶ÓÁĞ Ë³Ğò´æ´¢
-	 * 
-	 * @param byte[] key reids¼üÃû
-	 * @param byte[] value ¼üÖµ
+
 	 */
 	public static void lpush(byte[] key, byte[] value) {
 
@@ -244,23 +286,22 @@ public class JedisUtil {
 
 		} catch (Exception e) {
 
-			// ÊÍ·Åredis¶ÔÏó
+			// ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 			jedisPool.returnBrokenResource(jedis);
 			e.printStackTrace();
 
 		} finally {
 
-			// ·µ»¹µ½Á¬½Ó³Ø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
 			close(jedis);
 
 		}
 	}
 
 	/**
-	 * ´æ´¢REDIS¶ÓÁĞ ·´Ïò´æ´¢
+	 *
 	 * 
-	 * @param byte[] key reids¼üÃû
-	 * @param byte[] value ¼üÖµ
+
 	 */
 	public static void rpush(byte[] key, byte[] value) {
 
@@ -272,23 +313,20 @@ public class JedisUtil {
 
 		} catch (Exception e) {
 
-			// ÊÍ·Åredis¶ÔÏó
+			// ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 			jedisPool.returnBrokenResource(jedis);
 			e.printStackTrace();
 
 		} finally {
 
-			// ·µ»¹µ½Á¬½Ó³Ø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
 			close(jedis);
 
 		}
 	}
 
 	/**
-	 * ½«ÁĞ±í source ÖĞµÄ×îºóÒ»¸öÔªËØ(Î²ÔªËØ)µ¯³ö£¬²¢·µ»Ø¸ø¿Í»§¶Ë
-	 * 
-	 * @param byte[] key reids¼üÃû
-	 * @param byte[] value ¼üÖµ
+	 *
 	 */
 	public static void rpoplpush(byte[] key, byte[] destination) {
 
@@ -300,22 +338,20 @@ public class JedisUtil {
 
 		} catch (Exception e) {
 
-			// ÊÍ·Åredis¶ÔÏó
+			// ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 			jedisPool.returnBrokenResource(jedis);
 			e.printStackTrace();
 
 		} finally {
 
-			// ·µ»¹µ½Á¬½Ó³Ø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
 			close(jedis);
 
 		}
 	}
 
 	/**
-	 * »ñÈ¡¶ÓÁĞÊı¾İ
-	 * 
-	 * @param byte[] key ¼üÃû
+	 *
 	 * @return
 	 */
 	public static List<byte[]> lpopList(byte[] key) {
@@ -329,13 +365,13 @@ public class JedisUtil {
 
 		} catch (Exception e) {
 
-			// ÊÍ·Åredis¶ÔÏó
+			// ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 			jedisPool.returnBrokenResource(jedis);
 			e.printStackTrace();
 
 		} finally {
 
-			// ·µ»¹µ½Á¬½Ó³Ø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
 			close(jedis);
 
 		}
@@ -343,9 +379,8 @@ public class JedisUtil {
 	}
 
 	/**
-	 * »ñÈ¡¶ÓÁĞÊı¾İ
 	 * 
-	 * @param byte[] key ¼üÃû
+	 * @param
 	 * @return
 	 */
 	public static byte[] rpop(byte[] key) {
@@ -359,13 +394,13 @@ public class JedisUtil {
 
 		} catch (Exception e) {
 
-			// ÊÍ·Åredis¶ÔÏó
+			// ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 			jedisPool.returnBrokenResource(jedis);
 			e.printStackTrace();
 
 		} finally {
 
-			// ·µ»¹µ½Á¬½Ó³Ø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
 			close(jedis);
 
 		}
@@ -378,12 +413,12 @@ public class JedisUtil {
 			jedis = jedisPool.getResource();
 			jedis.hmset(key.toString(), hash);
 		} catch (Exception e) {
-			// ÊÍ·Åredis¶ÔÏó
+			// ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 			jedisPool.returnBrokenResource(jedis);
 			e.printStackTrace();
 
 		} finally {
-			// ·µ»¹µ½Á¬½Ó³Ø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
 			close(jedis);
 
 		}
@@ -397,12 +432,12 @@ public class JedisUtil {
 			jedis.hmset(key.toString(), hash);
 			jedis.expire(key.toString(), time);
 		} catch (Exception e) {
-			// ÊÍ·Åredis¶ÔÏó
+			// ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 			jedisPool.returnBrokenResource(jedis);
 			e.printStackTrace();
 
 		} finally {
-			// ·µ»¹µ½Á¬½Ó³Ø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
 			close(jedis);
 
 		}
@@ -417,12 +452,12 @@ public class JedisUtil {
 			result = jedis.hmget(key.toString(), fields);
 
 		} catch (Exception e) {
-			// ÊÍ·Åredis¶ÔÏó
+			// ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 			jedisPool.returnBrokenResource(jedis);
 			e.printStackTrace();
 
 		} finally {
-			// ·µ»¹µ½Á¬½Ó³Ø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
 			close(jedis);
 
 		}
@@ -437,12 +472,12 @@ public class JedisUtil {
 			result = jedis.hkeys(key);
 
 		} catch (Exception e) {
-			// ÊÍ·Åredis¶ÔÏó
+			// ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 			jedisPool.returnBrokenResource(jedis);
 			e.printStackTrace();
 
 		} finally {
-			// ·µ»¹µ½Á¬½Ó³Ø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
 			close(jedis);
 
 		}
@@ -457,12 +492,12 @@ public class JedisUtil {
 			result = jedis.lrange(key, from, to);
 
 		} catch (Exception e) {
-			// ÊÍ·Åredis¶ÔÏó
+			// ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 			jedisPool.returnBrokenResource(jedis);
 			e.printStackTrace();
 
 		} finally {
-			// ·µ»¹µ½Á¬½Ó³Ø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
 			close(jedis);
 
 		}
@@ -472,10 +507,10 @@ public class JedisUtil {
 	/*
 	 * public static Map<byte[]> hgetAll(byte[] key) { Map<byte[]> result =
 	 * null; Jedis jedis = null; try { jedis = jedisPool.getResource(); result =
-	 * jedis.hgetAll(key); } catch (Exception e) { //ÊÍ·Åredis¶ÔÏó
+	 * jedis.hgetAll(key); } catch (Exception e) { //ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 	 * jedisPool.returnBrokenResource(jedis); e.printStackTrace();
 	 * 
-	 * } finally { //·µ»¹µ½Á¬½Ó³Ø close(jedis); } return result; }
+	 * } finally { //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½ close(jedis); } return result; }
 	 */
 
 	public static void del(byte[] key) {
@@ -485,11 +520,11 @@ public class JedisUtil {
 			jedis = jedisPool.getResource();
 			jedis.del(key);
 		} catch (Exception e) {
-			// ÊÍ·Åredis¶ÔÏó
+			// ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 			jedisPool.returnBrokenResource(jedis);
 			e.printStackTrace();
 		} finally {
-			// ·µ»¹µ½Á¬½Ó³Ø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
 			close(jedis);
 		}
 	}
@@ -502,11 +537,11 @@ public class JedisUtil {
 			jedis = jedisPool.getResource();
 			jedis.llen(key);
 		} catch (Exception e) {
-			// ÊÍ·Åredis¶ÔÏó
+			// ï¿½Í·ï¿½redisï¿½ï¿½ï¿½ï¿½
 			jedisPool.returnBrokenResource(jedis);
 			e.printStackTrace();
 		} finally {
-			// ·µ»¹µ½Á¬½Ó³Ø
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½
 			close(jedis);
 		}
 		return len;
