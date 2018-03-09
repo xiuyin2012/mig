@@ -58,7 +58,7 @@ public class GameTransactionServiceImp<T> implements GameTransactionService {
     public List<Map<String,String>> ratioByGameBET(){
         Jedis jedis = JedisPoolUtils.getJedis();
         Pipeline pipeline = jedis.pipelined();
-        //"g"+id as game hash of object,gmList as game table
+        //"g"+id as game id of hashObject,gmList as game table
         List<String> gmList = jedis.lrange("gmList",0,-1);
         List<Response<Map<String,String>>> gmMapRespList = new ArrayList<>();
         for(String gm:gmList){
@@ -77,7 +77,7 @@ public class GameTransactionServiceImp<T> implements GameTransactionService {
         List<String> ratiosStr = new ArrayList<>();
         List<Map<String,String>> rtnList = new ArrayList<>();
         double finalAmount=0.0;
-        int i=0;   //for remark index of ratio
+        int i=0;   //for remarking index of ratio
         for (TwoTuple<Map<String,String>,Response<String>> gameMapAndAmountItem:gameMapAndAmount){
             Map<String,String> gameMap = gameMapAndAmountItem.first;
             ratiosStr.add(gameMapAndAmountItem.second.get());
@@ -157,29 +157,9 @@ public class GameTransactionServiceImp<T> implements GameTransactionService {
             resultList.add(proResult);
             sortByAmount(resultList);
         }
-            //end new
-            //List<String> ml =  jedis.lrange("lofts",0,-1);
-            //get gameTransactionSet such as top 10
-            //Set<Tuple> rtnSet = jedis.zrevrangeWithScores("hall",0,9);
-            //put redisResp for pipeline
-            //add for init data
-            //done data
-/*        List<String> proList = jedis.lrange("proList",0,-1);
-        List<String> hallList = jedis.lrange("hallList",0,-1);
-        for(String pro:proList){
-            Set<String> pros = new HashSet<>();
-            Map<String,String> proMap = jedis.hgetAll(pro);
-            String hallRef = pro+"hallsSet";
-            jedis.hset(pro,"halls",hallRef);
-            for(String hall:hallList){
-                Map<String,String> hallMap = jedis.hgetAll(hall);
-                if(pro.equals(hallMap.get("proId"))){
-                    jedis.sadd(hallRef,hallMap.get("hallId"));
-                    //pros.add(hallMap.get("hallId"));
-                }
-            }
-        }*/
             //end done data
+
+        //initData   order:1
 /*        if(1==1){
             try {
                 //get Object that load the data of txt to redis
@@ -191,20 +171,37 @@ public class GameTransactionServiceImp<T> implements GameTransactionService {
                 for (Map<String,String> proMap:proList){
                     jedis.hset(proMap.get("proId"),"id", proMap.get("proId"));
                     jedis.hset(proMap.get("proId").getBytes(),"name".getBytes(), proMap.get("proNm").getBytes("utf-8"));
+
+                    jedis.lpush("proList",proMap.get("proId"); //push proList
                 }
                 for (Map<String,String> hallMap:hallList){
                     jedis.hset(hallMap.get("hallId"),"hallId", hallMap.get("hallId"));
                     jedis.hset(hallMap.get("hallId"),"proId", hallMap.get("proId"));
                     jedis.hset(hallMap.get("hallId").getBytes(),"hallNm".getBytes(), hallMap.get("hallNm").getBytes("utf-8"));
                     jedis.hset(hallMap.get("hallId").getBytes(),"proNm".getBytes(), hallMap.get("proNm").getBytes("utf-8"));
+
+                    jedis.lpush("hallList",hallMap.get("hallId");    //push hallList
                 }
-                jedis.hset("pro1".getBytes(),"name".getBytes(),"广东".getBytes("utf-8"));
-                jedis.hset("pro2".getBytes(),"name".getBytes(),"杭州".getBytes("utf-8"));
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
             return new ArrayList<>();
         }*/
+/*        List<String> proList = jedis.lrange("proList",0,-1);
+        List<String> hallList = jedis.lrange("hallList",0,-1);
+        for(String pro:proList){
+            Set<String> pros = new HashSet<>();
+            Map<String,String> proMap = jedis.hgetAll(pro);
+            String hallRef = pro+"hallsSet";
+            jedis.hset(pro,"halls",hallRef);
+            for(String hall:hallList){
+                Map<String,String> hallMap = jedis.hgetAll(hall);
+                if(pro.equals(hallMap.get("proId"))){
+                    jedis.sadd(hallRef,hallMap.get("hallId"));
+                }
+            }
+        }*/
+    //end initData
             pipeline.sync();
             jedis.close();
             return resultList;
