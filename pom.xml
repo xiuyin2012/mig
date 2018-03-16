@@ -387,7 +387,7 @@
         <configuration>
           <warSourceDirectory>src/main/webapp</warSourceDirectory>
           <failOnMissingWebXml>false</failOnMissingWebXml>
-          <outputDirectory>d:/deploy_wars</outputDirectory>
+
         </configuration>
       </plugin>
     </plugins>
