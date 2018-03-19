@@ -11,6 +11,7 @@ import redis.clients.jedis.Response;
 import redis.clients.jedis.Tuple;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -29,15 +30,24 @@ public class GameTransactionServiceImp<T> implements GameTransactionService {
         jedis.close();
         return amount;
     }
-    public List<Map<String,String>> getHallListByAmount(){
+    public List<Map<String,T>> getHallListByAmount(){
         Jedis jedis = JedisPoolUtils.getJedis();
-        List<Map<String,String>> rtnList = new ArrayList<>();
+        Pipeline pipeline = jedis.pipelined();
+        List<Map<String,T>> rtnList = new ArrayList<>();
         Set<Tuple> halls = jedis.zrevrangeWithScores("hall",0,-1);
         for (Iterator<Tuple> it=halls.iterator();it.hasNext();){
             Tuple item = it.next();
-            Map<String,String> itemMap = new HashMap<>();
-            itemMap.put(item.getElement(),String.valueOf(item.getScore()));
+            Map<String,T> itemMap = new HashMap<>();
+            Response<String> hallNmResp= pipeline.hget(item.getElement(),"hallNm");
+            itemMap.put("hallNm",(T)hallNmResp);
+            DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");//格式化设置
+            itemMap.put("amount",(T)String.valueOf(decimalFormat.format(item.getScore())));
             rtnList.add(itemMap);
+        }
+        pipeline.sync();
+        for (Map<String,T> itemRtnList:rtnList){
+            Response<String> hallNmResp = (Response<String>) itemRtnList.get("hallNm");
+            itemRtnList.put("hallNm",(T)hallNmResp.get());
         }
         jedis.close();
         return rtnList;
@@ -46,14 +56,30 @@ public class GameTransactionServiceImp<T> implements GameTransactionService {
         Jedis jedis = JedisPoolUtils.getJedis();
         List<Map<String,String>> rtnList = new ArrayList<>();
         Set<Tuple> scoreSet = jedis.zrevrangeWithScores("score",0,-1);
+        List<Map<String,String>> rtnArrayList = new ArrayList<>();
         for (Iterator<Tuple> it=scoreSet.iterator();it.hasNext();){
             Tuple item = it.next();
             Map<String,String> itemMap = new HashMap<>();
             itemMap.put(item.getElement(),String.valueOf(item.getScore()));
-            rtnList.add(itemMap);
+            Map<String,String> mapItem = new HashMap<>();
+            mapItem.put("score",item.getElement());
+            mapItem.put("amount",String.valueOf(item.getScore()));//{item.getElement(),String.valueOf(item.getScore())};
+            rtnArrayList.add(mapItem);
+            rtnArrayList.sort(new Comparator<Map<String, String>>() {
+                @Override
+                public int compare(Map<String, String> o1, Map<String, String> o2) {
+                    int i=0;
+                    int diff=Integer.parseInt(o1.get("score"))-Integer.parseInt(o2.get("score"));
+                    if(diff!=0){
+                        return i=(diff>0?1:-1);
+                    }
+                    return i;
+                 }
+            });
+            //rtnList.add(itemMap);
         }
         jedis.close();
-        return rtnList;
+        return rtnArrayList;
     }
     public List<Map<String,String>> ratioByGameBET(){
         Jedis jedis = JedisPoolUtils.getJedis();
@@ -86,12 +112,6 @@ public class GameTransactionServiceImp<T> implements GameTransactionService {
             //finalAmount+=Double.parseDouble(gameMapAndAmountItem.second.get());
         }
         //for(int j=0;j<rtnList.size();j++)rtnList.get(j).put("ratio",String.valueOf(Double.parseDouble(rtnList.get(j).get("ratio"))/finalAmount));
-
-/*        for(Iterator<String> it = ratiosStr.iterator();it.hasNext();){
-            String item = it.next();
-            item= String.valueOf(Double.parseDouble(item)/finalAmount);
-        }*/
-        //for(String ratioStr:ratiosStr) ratioStr= String.valueOf(Double.parseDouble(ratioStr)/finalAmount);
 
 
 
