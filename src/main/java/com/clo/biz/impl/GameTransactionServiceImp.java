@@ -83,9 +83,9 @@ public class GameTransactionServiceImp<T> implements GameTransactionService {
             ratiosStr.add(gameMapAndAmountItem.second.get());
             gameMap.put("ratio",ratiosStr.get(i++));
             rtnList.add(gameMap);
-            finalAmount+=Double.parseDouble(gameMapAndAmountItem.second.get());
+            //finalAmount+=Double.parseDouble(gameMapAndAmountItem.second.get());
         }
-        for(int j=0;j<rtnList.size();j++)rtnList.get(j).put("ratio",String.valueOf(Double.parseDouble(rtnList.get(j).get("ratio"))/finalAmount));
+        //for(int j=0;j<rtnList.size();j++)rtnList.get(j).put("ratio",String.valueOf(Double.parseDouble(rtnList.get(j).get("ratio"))/finalAmount));
 
 /*        for(Iterator<String> it = ratiosStr.iterator();it.hasNext();){
             String item = it.next();
