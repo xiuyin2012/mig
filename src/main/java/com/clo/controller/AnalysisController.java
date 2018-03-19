@@ -7,8 +7,8 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.clo.biz.GameTransactionService;
-import com.clo.util.JedisPoolUtils;
+//import com.clo.biz.GameTransactionService;
+//import com.clo.util.JedisPoolUtils;
 import com.clo.util.JedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
