@@ -44,80 +44,81 @@
             });
         }
         $(function() {
+            leftOne();
             setInterval("leftOne()",10000);
             alert('台取数据结果！' );
 
-             $.ajax({
+            $.ajax({
 
-             type:"POST",
-             async:false,
-             url:"<c:url value='/analysis/ratioByGameBET.do'/>",
-             data:{},
-             dataType:"json",
-             success:function(dataResp){
-             dataN = dataResp;
-             // alert(data);
-             //ewJsonData = data;
-             },
-             error : function() {
-             //请求之后，响应不成功或者有错误执行
-             alert("异常222222222222222！");
-             }
-             });
+                type:"POST",
+                async:false,
+                url:"<c:url value='/analysis/ratioByGameBET.do'/>",
+                data:{},
+                dataType:"json",
+                success:function(dataResp){
+                    dataN = dataResp;
+                    // alert(data);
+                    //ewJsonData = data;
+                },
+                error : function() {
+                    //请求之后，响应不成功或者有错误执行
+                    alert("异常222222222222222！");
+                }
+            });
 
-             $.ajax({
+            $.ajax({
 
-             type:"POST",
-             async:false,
-             url:"<c:url value='/analysis/getTotalBETbyScore.do'/>",
-             data:{},
-             dataType:"json",
-             success:function(data){
-             //alert(data);
-             //ewJsonData = data;
-             },
-             error : function() {
-             //请求之后，响应不成功或者有错误执行
-             alert("异常3333333333333！");
-             }
-             });
+                type:"POST",
+                async:false,
+                url:"<c:url value='/analysis/getTotalBETbyScore.do'/>",
+                data:{},
+                dataType:"json",
+                success:function(data){
+                    //alert(data);
+                    //ewJsonData = data;
+                },
+                error : function() {
+                    //请求之后，响应不成功或者有错误执行
+                    alert("异常3333333333333！");
+                }
+            });
 
-             $.ajax({
+            $.ajax({
 
-             type:"POST",
-             async:false,
-             url:"<c:url value='/analysis/getHallListByAmount.do'/>",
-             data:{},
-             dataType:"json",
-             success:function(dataResp){
-             data2=dataResp;
-             //alert(data);
-             //ewJsonData = data;
-             },
-             error : function() {
-             //请求之后，响应不成功或者有错误执行
-             alert("异常444444444444444！");
-             }
-             });
+                type:"POST",
+                async:false,
+                url:"<c:url value='/analysis/getHallListByAmount.do'/>",
+                data:{},
+                dataType:"json",
+                success:function(dataResp){
+                    data2=dataResp;
+                    //alert(data);
+                    //ewJsonData = data;
+                },
+                error : function() {
+                    //请求之后，响应不成功或者有错误执行
+                    alert("异常444444444444444！");
+                }
+            });
 
-             $.ajax({
+            $.ajax({
 
-             type:"POST",
-             async:false,
-             url:"<c:url value='/analysis/getFinalAmount.do'/>",
-             data:{},
-             dataType:"json",
-             success:function(dataResp){
-             $("#d5").html(dataResp);
+                type:"POST",
+                async:false,
+                url:"<c:url value='/analysis/getFinalAmount.do'/>",
+                data:{},
+                dataType:"json",
+                success:function(dataResp){
+                    $("#d5").html(dataResp);
 
-             //alert(data);
-             //ewJsonData = data;
-             },
-             error : function() {
-             //请求之后，响应不成功或者有错误执行
-             alert("异常555555555555555555！");
-             }
-             });
+                    //alert(data);
+                    //ewJsonData = data;
+                },
+                error : function() {
+                    //请求之后，响应不成功或者有错误执行
+                    alert("异常555555555555555555！");
+                }
+            });
 
         });
     </script>
@@ -165,26 +166,26 @@
         //饼图
         function pieDataRender(){
             var chartData = new Array();
-/*            var tempJson=[{"name":"四花选五","id":"13","ratio":"3"},{"name":"开心一刻","id":"12","ratio":"7"},
-                {"name":"幸运五彩","id":"11","ratio":"2.5"},{"name":"三江风光","id":"21","ratio":"6"},
-                {"name":"好运射击","id":"25","ratio":"5"},{"name":"趣味高尔夫","id":"26","ratio":"4"},
-                {"name":"连环夺宝","id":"24","ratio":"5"}];*/
-          $.ajax({
-             type:"POST",
-             async:false,
-             url:"<c:url value='/analysis/ratioByGameBET.do'/>",
-             data:{},
-             dataType:"json",
-             success:function(dataResp){
-                 $.each(dataResp,function(index,value){
-                     chartData.push([dataResp[index].name,parseFloat(dataResp[index].ratio)]);
-                 });
-             },
-             error : function() {
-             //请求之后，响应不成功或者有错误执行
-             alert("异常3333333333333！");
-             }
-             });
+            /*            var tempJson=[{"name":"四花选五","id":"13","ratio":"3"},{"name":"开心一刻","id":"12","ratio":"7"},
+             {"name":"幸运五彩","id":"11","ratio":"2.5"},{"name":"三江风光","id":"21","ratio":"6"},
+             {"name":"好运射击","id":"25","ratio":"5"},{"name":"趣味高尔夫","id":"26","ratio":"4"},
+             {"name":"连环夺宝","id":"24","ratio":"5"}];*/
+            $.ajax({
+                type:"POST",
+                async:false,
+                url:"<c:url value='/analysis/ratioByGameBET.do'/>",
+                data:{},
+                dataType:"json",
+                success:function(dataResp){
+                    $.each(dataResp,function(index,value){
+                        chartData.push([dataResp[index].name,parseFloat(dataResp[index].ratio)]);
+                    });
+                },
+                error : function() {
+                    //请求之后，响应不成功或者有错误执行
+                    alert("异常3333333333333！");
+                }
+            });
             //chartData=[['连环夺宝', 7], ['鸵鸟快跑', 29], ['连环1夺宝', 15],['连环2夺宝', 12],  ['连3环夺宝', 18]];
             alert(chartData);
             return [chartData];
@@ -252,7 +253,7 @@
         //柱状图
 
         function barRender(){
-            var respData;
+            var respData=new Array();
             $.ajax({
 
                 type:"POST",
@@ -260,8 +261,14 @@
                 url:"<c:url value='/analysis/getTotalBETbyScore.do'/>",
                 data:{},
                 dataType:"json",
-                success:function(data){
-                    respData=data;
+                success:function(dataResp){
+                    $.each(dataResp,function(index,value){
+                        var localArray=new Array();
+                        localArray.push(dataResp[index]["score"]);
+                        localArray.push(dataResp[index]["amount"]);
+
+                        respData.push(localArray);
+                    });
                     //alert(data);
                     //ewJsonData = data;
                 },
