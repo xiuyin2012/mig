@@ -19,8 +19,9 @@ import java.util.*;
  */
 @Service("gameTransactionService")
 public class GameTransactionServiceImp<T> implements GameTransactionService {
-    double amount=0.0;
+    
     public double getFinalAmount(){
+        double amount=0.0;
         Jedis jedis = JedisPoolUtils.getJedis();
         Set<Tuple> halls = jedis.zrangeWithScores("hall",0,-1);
         for(Iterator<Tuple> it = halls.iterator(); it.hasNext();){
