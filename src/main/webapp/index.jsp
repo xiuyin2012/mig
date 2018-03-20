@@ -22,9 +22,9 @@
     <script type="text/javascript" src="<c:url value='/js/jqplot/plugins/jqplot.barRenderer.min.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/js/jqplot/plugins/jqplot.pieRenderer.min.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/js/jqplot/plugins/jqplot.donutRenderer.min.js'/>"></script>
-    <script type="text/javascript">
 
-        alert('开始后台取数据！！！！');
+    <script type="text/javascript">
+        //左一表格
         function leftOne() {
             $.ajax({
                 type: "POST",
@@ -35,7 +35,6 @@
                 success: function (respData) {
                     data = respData;
                     leftOneRender();
-                    //ewJsonData = data;
                 },
                 error: function () {
                     //请求之后，响应不成功或者有错误执行
@@ -43,48 +42,71 @@
                 }
             });
         }
-        $(function() {
-            leftOne();
-            setInterval("leftOne()",10000);
-            alert('台取数据结果！' );
 
+        //右二饼图
+        function pieDataRender(){
+            //("右二");
+            var chartData = new Array();
+            /*            var tempJson=[{"name":"四花选五","id":"13","ratio":"3"},{"name":"开心一刻","id":"12","ratio":"7"},
+             {"name":"幸运五彩","id":"11","ratio":"2.5"},{"name":"三江风光","id":"21","ratio":"6"},
+             {"name":"好运射击","id":"25","ratio":"5"},{"name":"趣味高尔夫","id":"26","ratio":"4"},
+             {"name":"连环夺宝","id":"24","ratio":"5"}];*/
             $.ajax({
-
                 type:"POST",
                 async:false,
                 url:"<c:url value='/analysis/ratioByGameBET.do'/>",
                 data:{},
                 dataType:"json",
                 success:function(dataResp){
-                    dataN = dataResp;
-                    // alert(data);
-                    //ewJsonData = data;
+                    $.each(dataResp,function(index,value){
+                        chartData.push([dataResp[index].name,parseFloat(dataResp[index].ratio)]);
+                    });
                 },
                 error : function() {
                     //请求之后，响应不成功或者有错误执行
-                    alert("异常222222222222222！");
+                    //alert("异常3333333333333！");
                 }
             });
+            //chartData=[['连环夺宝', 7], ['鸵鸟快跑', 29], ['连环1夺宝', 15],['连环2夺宝', 12],  ['连3环夺宝', 18]];
+           // alert(chartData);
+            return [chartData];
+        }
 
+
+
+        //左三柱状图
+            function barRender(){
+                var respData=new Array();
+                $.ajax({
+                    type:"POST",
+                    async:false,
+                    url:"<c:url value='/analysis/getTotalBETbyScore.do'/>",
+                    data:{},
+                    dataType:"json",
+                    success:function(dataResp){
+                        $.each(dataResp,function(index,value){
+
+                            var localArray=new Array();
+                            localArray.push(dataResp[index]["score"]);
+                            localArray.push(parseFloat(dataResp[index]["amount"]));
+                            respData.push(localArray);
+                        });
+                        //alert("legth:"+respData.length);
+                        //alert(data);
+                        //ewJsonData = data;
+                    },
+                    error : function() {
+                        //请求之后，响应不成功或者有错误执行
+                        //alert("异常3333333333333！");
+                    }
+                });
+                return [respData];
+            }
+
+        //右四表格
+        function rightFour() {
+                //alert("右四");
             $.ajax({
-
-                type:"POST",
-                async:false,
-                url:"<c:url value='/analysis/getTotalBETbyScore.do'/>",
-                data:{},
-                dataType:"json",
-                success:function(data){
-                    //alert(data);
-                    //ewJsonData = data;
-                },
-                error : function() {
-                    //请求之后，响应不成功或者有错误执行
-                    alert("异常3333333333333！");
-                }
-            });
-
-            $.ajax({
-
                 type:"POST",
                 async:false,
                 url:"<c:url value='/analysis/getHallListByAmount.do'/>",
@@ -92,33 +114,41 @@
                 dataType:"json",
                 success:function(dataResp){
                     data2=dataResp;
-                    //alert(data);
-                    //ewJsonData = data;
                 },
                 error : function() {
                     //请求之后，响应不成功或者有错误执行
-                    alert("异常444444444444444！");
+                    //alert("异常444444444444444！");
                 }
             });
-
+        }
+        //中间统计数据
+        function middleData() {
             $.ajax({
-
                 type:"POST",
                 async:false,
                 url:"<c:url value='/analysis/getFinalAmount.do'/>",
                 data:{},
                 dataType:"json",
-                success:function(dataResp){
-                    $("#d5").html(dataResp);
-
-                    //alert(data);
-                    //ewJsonData = data;
+                success:function(dataResp2){
+                    $("#d5").html(dataResp2);
                 },
                 error : function() {
                     //请求之后，响应不成功或者有错误执行
-                    alert("异常555555555555555555！");
+                    //alert("异常555555555555555555！");
                 }
             });
+        }
+        $(function() {
+            leftOne();//左一表格
+            pieDataRender();//右二饼图
+            barRender();//左三柱状图
+            rightFour();//右四表格
+            middleData();//中间统计数据
+            setInterval("leftOne()",5000);
+            setInterval("pieDataRender()",5000);
+            setInterval("barRender()",5000);
+            setInterval("rightFour()",5000);
+            setInterval("middleData()",5000);
 
         });
     </script>
@@ -141,7 +171,7 @@
                 $trTemp1.appendTo("#div1");
             }
         }
-        alert(data2);
+        //alert(data2);
         $(function(){
             // 动态创建表格，使用动态创建dom对象的方式
             //清空所有的子节点
@@ -151,8 +181,8 @@
                 var $trTemp = $("<tr></tr>");
                 //往行里面追加 td单元格
                 var localInt = i+1
-                $trTemp.append("<td width='92'  align='left'>"+ localInt +"</td>");
-                $trTemp.append("<td width='107' align='left'>"+ data2[i].hallNm +"</td>");
+                $trTemp.append("<td width='62'  align='left'>"+ localInt +"</td>");
+                $trTemp.append("<td width='137' align='left'>"+ data2[i].hallNm +"</td>");
                 $trTemp.append("<td width='102' align='left'>"+ data2[i].amount +"</td>");
                 $trTemp.appendTo("#div2");
             }
@@ -164,35 +194,9 @@
 
     <script type="text/javascript" language="javascript">
         //饼图
-        function pieDataRender(){
-            var chartData = new Array();
-            /*            var tempJson=[{"name":"四花选五","id":"13","ratio":"3"},{"name":"开心一刻","id":"12","ratio":"7"},
-             {"name":"幸运五彩","id":"11","ratio":"2.5"},{"name":"三江风光","id":"21","ratio":"6"},
-             {"name":"好运射击","id":"25","ratio":"5"},{"name":"趣味高尔夫","id":"26","ratio":"4"},
-             {"name":"连环夺宝","id":"24","ratio":"5"}];*/
-            $.ajax({
-                type:"POST",
-                async:false,
-                url:"<c:url value='/analysis/ratioByGameBET.do'/>",
-                data:{},
-                dataType:"json",
-                success:function(dataResp){
-                    $.each(dataResp,function(index,value){
-                        chartData.push([dataResp[index].name,parseFloat(dataResp[index].ratio)]);
-                    });
-                },
-                error : function() {
-                    //请求之后，响应不成功或者有错误执行
-                    alert("异常3333333333333！");
-                }
-            });
-            //chartData=[['连环夺宝', 7], ['鸵鸟快跑', 29], ['连环1夺宝', 15],['连环2夺宝', 12],  ['连3环夺宝', 18]];
-            alert(chartData);
-            return [chartData];
-        }
         $(document).ready(function(){
             var dataN=[['四花选五',3],['开心一刻',7],['幸运五彩',2.5],['三江风光',6],['好运射击',5],['趣味高尔夫',4],['连环夺宝',5]];
-            alert(dataN);
+            //alert(dataN);
             var  plot1 = $.jqplot('d3', [dataN], {
                 title:' ',//设置饼状图的标题
                 dataRenderer:pieDataRender,
@@ -230,7 +234,7 @@
                     xoffset: 10,        // 分类名称框距图表区域上边框的距离（单位px）
                     yoffset: 30,        // 分类名称框距图表区域左边框的距离(单位px)
                     background:'rgba(0,0,0,0)',//分类名称框距图表区域背景色
-                    textColor:'', //分类名称框距图表区域内字体颜色
+                    textColor:'FFFFFF', //分类名称框距图表区域内字体颜色
                 },
             });
 
@@ -238,51 +242,12 @@
 
     </script>
 
-
-
-
-
-
-
-
-
-
-
-
     <script type="text/javascript">
-        //柱状图
 
-        function barRender(){
-            var respData=new Array();
-            $.ajax({
-
-                type:"POST",
-                async:false,
-                url:"<c:url value='/analysis/getTotalBETbyScore.do'/>",
-                data:{},
-                dataType:"json",
-                success:function(dataResp){
-                    $.each(dataResp,function(index,value){
-                        var localArray=new Array();
-                        localArray.push(dataResp[index]["score"]);
-                        localArray.push(dataResp[index]["amount"]);
-
-                        respData.push(localArray);
-                    });
-                    //alert(data);
-                    //ewJsonData = data;
-                },
-                error : function() {
-                    //请求之后，响应不成功或者有错误执行
-                    alert("异常3333333333333！");
-                }
-            });
-            return [respData];
-        }
         $(document).ready(function(){
-            var line1 = [['连环夺宝', 7], ['鸵鸟快跑', 29], ['连环1夺宝', 15],['连环2夺宝', 12],  ['连3环夺宝', 18]];
+            //var line1 = [['连环夺宝', 7], ['鸵鸟快跑', 29], ['连环1夺宝', 15],['连环2夺宝', 12],  ['连3环夺宝', 18]];
 
-            $.jqplot('d4', [line1], {
+            $.jqplot('d4', [], {
                 title: '',
                 dataRenderer: barRender,
                 grid: {
@@ -299,7 +264,7 @@
                 seriesDefaults : {
                     renderer : $.jqplot.BarRenderer, //使用柱状图表示
                     rendererOptions : {
-                        barMargin : 15  //柱状体组之间间隔
+                        barMargin : 10  //柱状体组之间间隔
                     },
                     pointLabels: {  // 显示数据点，依赖于jqplot.pointLabels.min.js文件
                         show: true
