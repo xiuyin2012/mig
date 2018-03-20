@@ -25,8 +25,9 @@ public class GameTransactionServiceImp<T> implements GameTransactionService {
         Jedis jedis = JedisPoolUtils.getJedis();
         Set<Tuple> halls = jedis.zrangeWithScores("hall",0,-1);
         for(Iterator<Tuple> it = halls.iterator(); it.hasNext();){
-            if (amount == 0.0) amount = it.next().getScore();
-            else amount+=it.next().getScore();
+            Tuple item = it.next();
+            if (amount == 0.0) amount = item.getScore();
+            else amount+=item.getScore();
         }
         jedis.close();
         return amount;
