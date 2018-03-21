@@ -26,6 +26,7 @@
     <script type="text/javascript">
         //左一表格
         function leftOne() {
+            //alert("左一数据刷新");
             $.ajax({
                 type: "POST",
                 async: false,
@@ -68,44 +69,45 @@
                 }
             });
             //chartData=[['连环夺宝', 7], ['鸵鸟快跑', 29], ['连环1夺宝', 15],['连环2夺宝', 12],  ['连3环夺宝', 18]];
-           // alert(chartData);
+            // alert(chartData);
             return [chartData];
         }
 
 
 
         //左三柱状图
-            function barRender(){
-                var respData=new Array();
-                $.ajax({
-                    type:"POST",
-                    async:false,
-                    url:"<c:url value='/analysis/getTotalBETbyScore.do'/>",
-                    data:{},
-                    dataType:"json",
-                    success:function(dataResp){
-                        $.each(dataResp,function(index,value){
+        function barRender(){
 
-                            var localArray=new Array();
-                            localArray.push(dataResp[index]["score"]);
-                            localArray.push(parseFloat(dataResp[index]["amount"]));
-                            respData.push(localArray);
-                        });
-                        //alert("legth:"+respData.length);
-                        //alert(data);
-                        //ewJsonData = data;
-                    },
-                    error : function() {
-                        //请求之后，响应不成功或者有错误执行
-                        //alert("异常3333333333333！");
-                    }
-                });
-                return [respData];
-            }
+            var respData=new Array();
+            $.ajax({
+                type:"POST",
+                async:false,
+                url:"<c:url value='/analysis/getTotalBETbyScore.do'/>",
+                data:{},
+                dataType:"json",
+                success:function(dataResp){
+                    $.each(dataResp,function(index,value){
+
+                        var localArray=new Array();
+                        localArray.push(dataResp[index]["score"]);
+                        localArray.push(parseFloat(dataResp[index]["amount"]));
+                        respData.push(localArray);
+                    });
+                    //alert("legth:"+respData.length);
+                    //alert(data);
+                    //ewJsonData = data;
+                },
+                error : function() {
+                    //请求之后，响应不成功或者有错误执行
+                    //alert("异常3333333333333！");
+                }
+            });
+            return [respData];
+        }
 
         //右四表格
         function rightFour() {
-                //alert("右四");
+            //alert("右四");
             $.ajax({
                 type:"POST",
                 async:false,
@@ -130,7 +132,7 @@
                 data:{},
                 dataType:"json",
                 success:function(dataResp2){
-                    $("#d5").html(dataResp2);
+                    $("#d5").html('<font size="18" color="white">'+dataResp2+'元</font>');
                 },
                 error : function() {
                     //请求之后，响应不成功或者有错误执行
@@ -154,8 +156,8 @@
     </script>
     <script type="text/javascript" language="javascript">
         //左一和右下列表
-        var data=[{"uid":"1","uname":"北京","sum":274.23},{"uid":"2","uname":"上海","sum":0},{"uid":"3","uname":"广州","sum":7917.94},{"uid":"4","uname":"深圳公司","sum":41.39},{"uid":"5","uname":"福建","sum":274.23},{"uid":"6","uname":"福建","sum":274.23},{"uid":"7","uname":"福建","sum":274.23},{"uid":"8","uname":"福建","sum":274.23},{"uid":"9","uname":"福建","sum":274.23},{"uid":"10","uname":"福建","sum":274.23}]
-        var data2=[{"uid":"11","uname":"北1京","sum":274.23},{"uid":"2","uname":"上1海","sum":0},{"uid":"13","uname":"广州","sum":7917.94},{"uid":"4","uname":"深圳公司","sum":41.39},{"uid":"5","uname":"福建","sum":274.23},{"uid":"6","uname":"福建","sum":274.23},{"uid":"7","uname":"福建","sum":274.23},{"uid":"8","uname":"福建","sum":274.23},{"uid":"9","uname":"福建","sum":274.23},{"uid":"10","uname":"福建","sum":274.23}]
+        var data=[]
+        var data2=[]
         function leftOneRender() {
             // 动态创建表格，使用动态创建dom对象的方式
             //清空所有的子节点
@@ -203,6 +205,7 @@
                 grid:{
                     background:'rgba(0,0,0,0)',
                     //filter:'alpha(opacity=0)',
+
                     //background: '#00dd00',      // 设置整个图表区域的背景色
                     borderWidth: 0,           //设置图表的（最外侧）边框宽度
                     shadow: true,               // 为整个图标（最外侧）边框设置阴影，以突出其立体效果
@@ -213,15 +216,17 @@
                     shadowAlpha: 0.07           // 设置阴影区域的透明度
 
                 },
-                seriesColors:["red", "yellow", "#EAA228", "blue", "green", "#958c12","#FFF"  //设置饼图每个区域颜色
-                ],
+                seriesColors:["#1566c3", "#1976d6", "#2e90e6", "#41a6f3", "#66b5f3", "#88c4f6","#9bd2fc" ], //设置饼图每个区域颜色
+
+                //seriesColors:["#9a7de6", "#78b0ed", "#71dec4", "#b5dcb4", "#ffd8a3", "#ff9b97","#ff628c"],  //设置饼图每个区域颜色
+
                 seriesDefaults: {
                     renderer:$.jqplot.PieRenderer,
                     rendererOptions:{
                         showDataLabels: true,
                         diameter: undefined, // 设置饼的直径
                         padding: 10,        // 饼距离其分类名称框或者图表边框的距离，变相该表饼的直径
-                        sliceMargin: 3,     // 饼的每个部分之间的距离
+                        sliceMargin: 0,     // 饼的每个部分之间的距离
                         fill:true,         // 设置饼的每部分被填充的状态
                         shadow:true,       //为饼的每个部分的边框设置阴影，以突出其立体效果
                         showMark:true, //设置是否显示刻
@@ -264,7 +269,7 @@
                 seriesDefaults : {
                     renderer : $.jqplot.BarRenderer, //使用柱状图表示
                     rendererOptions : {
-                        barMargin : 10  //柱状体组之间间隔
+                        barMargin : 11  //柱状体组之间间隔
                     },
                     pointLabels: {  // 显示数据点，依赖于jqplot.pointLabels.min.js文件
                         show: true
@@ -278,8 +283,8 @@
                     //showTickMarks: true,
                     tickRenderer: $.jqplot.CanvasAxisTickRenderer,
                     tickOptions: {
-                        fontFamily: 'Georgia',
-                        angle: -30,
+                       // fontFamily: 'Georgia',
+                        angle: -45,
                         fontSize: '10pt',
                         // 设置刻度在坐标轴上的显示方式：分为:坐标轴外显示，内显示，和穿过显示;其值分别为 'outside', 'inside' or 'cross'
                         mark: 'inside',
@@ -298,10 +303,11 @@
                         formatString: '',
                         // 刻度值的字体大小
                         fontSize: '10px',
+                        textColor:'#FFFFFF',
                         // 刻度值上字体
-                        fontFamily: 'Tahoma',
+                        //fontFamily: 'Tahoma',
                         // 字体的粗细
-                        fontWeight: 'normal',
+                        //fontWeight: 'normal',
                         // 刻度值在所在方向（坐标轴外）上的伸展(拉伸)度
                         fontStretch: 1
                     },
@@ -313,7 +319,7 @@
                 axes: {
                     xaxis: {
                         renderer: $.jqplot.CategoryAxisRenderer, //x轴绘制方式
-                        labelRenderer: $.jqplot.CanvasAxisLabelRenderer
+                        labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
                     },
                     yaxis: {
                         //min: 0,           //y轴最小值
@@ -330,24 +336,24 @@
     table {
         border-collapse: collapse;
         border-spacing: 0;
-        border: 0px solid #c0c0c0;
+        border: 0px solid #ffffff;
     }
     th,td {
-        border: 0px solid #d0d0d0;
+        border: 0px solid #ffffff;
     //color: #404060;
         padding: 1px;//表格上下间距
     width:92px;
     }
     th {
-        background-color: #09c;
+        background-color: #ffffff;
         font: bold 12px "微软雅黑";
-        color: #fff;
+        color: #ffffff;
     }
     td {
         font: 12px "微软雅黑";
     }
     tbody tr {
-    //background-color: #f0f0f0;
+    //background-color: #ffffff;
     }
     tbody tr:hover {
         cursor: pointer;
@@ -368,7 +374,7 @@
     }
     .no3{	left: 943px;	top: 161px		}
     .no4{	left: 85px;	top: 509px}
-    .no5{	left: 649px;	top: 453px}
+    .no5{	left: 547px;	top: 453px}
 </style>
 <body background="" text="#FFFFFF" >
 <div style="background: url(/img/zc1.jpg); width: 1366px; height: 800px; box-shadow: none" >
@@ -385,8 +391,7 @@
     <div  class="no no3" id="d3" style="margin-top: 20px; margin-left: 20px; width: 320px; height: 220px; ">     </div>
     <div  class="no no4" id="d4" style="margin-top: 20px; margin-left: 20px; width: 347px; height: 238px;">
     </div>
-
-    <span class="no no5" id="d5">888888888888</span>
+    <div align="center"><span class="no no5" id="d5"></span></div>
 </div>
 </body>
 </html>
