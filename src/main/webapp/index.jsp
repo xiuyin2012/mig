@@ -26,7 +26,6 @@
     <script type="text/javascript">
         //左一表格
         function leftOne() {
-            //alert("左一数据刷新");
             $.ajax({
                 type: "POST",
                 async: false,
@@ -39,7 +38,6 @@
                 },
                 error: function () {
                     //请求之后，响应不成功或者有错误执行
-                    // alert("异常11111111111111111！");
                 }
             });
         }
@@ -65,19 +63,12 @@
                 },
                 error : function() {
                     //请求之后，响应不成功或者有错误执行
-                    //alert("异常3333333333333！");
                 }
             });
-            //chartData=[['连环夺宝', 7], ['鸵鸟快跑', 29], ['连环1夺宝', 15],['连环2夺宝', 12],  ['连3环夺宝', 18]];
-            // alert(chartData);
             return [chartData];
         }
-
-
-
         //左三柱状图
         function barRender(){
-
             var respData=new Array();
             $.ajax({
                 type:"POST",
@@ -93,13 +84,9 @@
                         localArray.push(parseFloat(dataResp[index]["amount"]));
                         respData.push(localArray);
                     });
-                    //alert("legth:"+respData.length);
-                    //alert(data);
-                    //ewJsonData = data;
                 },
                 error : function() {
                     //请求之后，响应不成功或者有错误执行
-                    //alert("异常3333333333333！");
                 }
             });
             return [respData];
@@ -107,7 +94,6 @@
 
         //右四表格
         function rightFour() {
-            //alert("右四");
             $.ajax({
                 type:"POST",
                 async:false,
@@ -119,7 +105,6 @@
                 },
                 error : function() {
                     //请求之后，响应不成功或者有错误执行
-                    //alert("异常444444444444444！");
                 }
             });
         }
@@ -136,7 +121,6 @@
                 },
                 error : function() {
                     //请求之后，响应不成功或者有错误执行
-                    //alert("异常555555555555555555！");
                 }
             });
         }
@@ -173,7 +157,6 @@
                 $trTemp1.appendTo("#div1");
             }
         }
-        //alert(data2);
         $(function(){
             // 动态创建表格，使用动态创建dom对象的方式
             //清空所有的子节点
@@ -189,10 +172,7 @@
                 $trTemp.appendTo("#div2");
             }
         });
-
-
     </script>
-
 
     <script type="text/javascript" language="javascript">
         //饼图
@@ -204,8 +184,6 @@
                 dataRenderer:pieDataRender,
                 grid:{
                     background:'rgba(0,0,0,0)',
-                    //filter:'alpha(opacity=0)',
-
                     //background: '#00dd00',      // 设置整个图表区域的背景色
                     borderWidth: 0,           //设置图表的（最外侧）边框宽度
                     shadow: true,               // 为整个图标（最外侧）边框设置阴影，以突出其立体效果
@@ -250,15 +228,10 @@
     <script type="text/javascript">
 
         $(document).ready(function(){
-            //var line1 = [['连环夺宝', 7], ['鸵鸟快跑', 29], ['连环1夺宝', 15],['连环2夺宝', 12],  ['连3环夺宝', 18]];
-
             $.jqplot('d4', [], {
                 title: '',
                 dataRenderer: barRender,
                 grid: {
-                    //showMarker: false,
-                    //showTickMarks: true,
-
                     background:'rgba(0,0,0,0)',
                     drawGridLines: true,
                     gridLineColor: '#',    // 设置整个图标区域网格背景线的颜色
@@ -277,10 +250,6 @@
                     showLabel:true
                 },
                 axesDefaults: {
-                    //pad: 5,
-                    //showMark: true,
-                    // 设置是否显示刻度
-                    //showTickMarks: true,
                     tickRenderer: $.jqplot.CanvasAxisTickRenderer,
                     tickOptions: {
                        // fontFamily: 'Georgia',
@@ -389,8 +358,7 @@
         </table>
     </div>
     <div  class="no no3" id="d3" style="margin-top: 20px; margin-left: 20px; width: 320px; height: 220px; ">     </div>
-    <div  class="no no4" id="d4" style="margin-top: 20px; margin-left: 20px; width: 347px; height: 238px;">
-    </div>
+    <div  class="no no4" id="d4" style="margin-top: 20px; margin-left: 20px; width: 347px; height: 238px;">    </div>
     <div align="center"><span class="no no5" id="d5"></span></div>
 </div>
 </body>
