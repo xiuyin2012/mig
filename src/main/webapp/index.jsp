@@ -117,7 +117,7 @@
                 data:{},
                 dataType:"json",
                 success:function(dataResp2){
-                    $("#d5").html('<font size="18" color="white">'+dataResp2+'元</font>');
+                    $("#d5").html("<font size='6' color='yellow'>"+dataResp2+"元</font>");
                 },
                 error : function() {
                     //请求之后，响应不成功或者有错误执行
@@ -167,7 +167,7 @@
                 //往行里面追加 td单元格
                 var localInt = i+1
                 $trTemp.append("<td width='62'  align='left'>"+ localInt +"</td>");
-                $trTemp.append("<td width='137' align='left'>"+ data2[i].hallNm +"</td>");
+                $trTemp.append("<td width='137px' align='left' class='ellipsis_div' title='"+data2[i].hallNm+"'>"+ data2[i].hallNm +"</td>");
                 $trTemp.append("<td width='102' align='left'>"+ data2[i].amount +"</td>");
                 $trTemp.appendTo("#div2");
             }
@@ -194,9 +194,9 @@
                     shadowAlpha: 0.07           // 设置阴影区域的透明度
 
                 },
-                seriesColors:["#1566c3", "#1976d6", "#2e90e6", "#41a6f3", "#66b5f3", "#88c4f6","#9bd2fc" ], //设置饼图每个区域颜色
+                //seriesColors:["#1566c3", "#1976d6", "#2e90e6", "#41a6f3", "#66b5f3", "#88c4f6","#9bd2fc" ], //设置饼图每个区域颜色
 
-                //seriesColors:["#9a7de6", "#78b0ed", "#71dec4", "#b5dcb4", "#ffd8a3", "#ff9b97","#ff628c"],  //设置饼图每个区域颜色
+                seriesColors:["#9a7de6", "#78b0ed", "#71dec4", "#b5dcb4", "#ffd8a3", "#ff9b97","#ff628c"],  //设置饼图每个区域颜色
 
                 seriesDefaults: {
                     renderer:$.jqplot.PieRenderer,
@@ -339,11 +339,18 @@
     }
     .no2{
         left: 989px;
-        top: 552px
+        top: 552px;
     }
     .no3{	left: 943px;	top: 161px		}
     .no4{	left: 85px;	top: 509px}
-    .no5{	left: 547px;	top: 453px}
+    .no5{	left: 547px;	top: 415px }
+    .ellipsis_div{
+        max-width:1px;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+
+    }
 </style>
 <body background="" text="#FFFFFF" >
 <div style="background: url(/img/zc1.jpg); width: 1366px; height: 800px; box-shadow: none" >
