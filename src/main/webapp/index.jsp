@@ -117,7 +117,8 @@
                 data:{},
                 dataType:"json",
                 success:function(dataResp2){
-                    $("#d5").html("<font size='6' color='yellow'>"+dataResp2+"元</font>");
+                    //$("#d5").html("<font size='6' color='yellow'>"+dataResp2+"元</font>");
+                    $("#d5").html(dataResp2+"元");
                 },
                 error : function() {
                     //请求之后，响应不成功或者有错误执行
@@ -196,7 +197,7 @@
                 },
                 //seriesColors:["#1566c3", "#1976d6", "#2e90e6", "#41a6f3", "#66b5f3", "#88c4f6","#9bd2fc" ], //设置饼图每个区域颜色
 
-                seriesColors:["#9a7de6", "#78b0ed", "#71dec4", "#b5dcb4", "#ffd8a3", "#ff9b97","#ff628c"],  //设置饼图每个区域颜色
+                seriesColors:["#9a7de6","#ff628c", "#71dec4", "#b5dcb4", "#ffd8a3", "#ff9b97", "#78b0ed"],  //设置饼图每个区域颜色
 
                 seriesDefaults: {
                     renderer:$.jqplot.PieRenderer,
@@ -343,7 +344,14 @@
     }
     .no3{	left: 943px;	top: 161px		}
     .no4{	left: 85px;	top: 509px}
-    .no5{	left: 547px;	top: 415px }
+    .no5{	left: 547px;	top: 415px ;font: bold 36px "微软雅黑";color: #ffff00;
+        //text-shadow: 5px -2px 4px #000000;
+    }
+    .no6{
+        left: 1084px;
+        top: 70px;
+        font: bold 18px "微软雅黑";
+    }
     .ellipsis_div{
         max-width:1px;
         overflow:hidden;
@@ -367,6 +375,21 @@
     <div  class="no no3" id="d3" style="margin-top: 20px; margin-left: 20px; width: 320px; height: 220px; ">     </div>
     <div  class="no no4" id="d4" style="margin-top: 20px; margin-left: 20px; width: 347px; height: 238px;">    </div>
     <div align="center"><span class="no no5" id="d5"></span></div>
+    <div  class="no no6" id="d6" style="margin-top: 20px; margin-left: 20px; width: 320px; height: 220px; ">
+
+
+                <script>
+                    function Appendzero(obj)
+                    {
+                        if(obj<10) return "0" +""+ obj;
+                        else return obj;
+                    }
+                    setInterval("d6.innerHTML=new Date().getFullYear()+'/'+new Date().getMonth()+'/'+new Date().getDay()+'&nbsp'+Appendzero(new Date().getHours()) + ':' +Appendzero(new Date(). getMinutes())  ;",1000);
+   </script>
+
+
+
+    </div>
 </div>
 </body>
 </html>
