@@ -22,6 +22,7 @@ import redis.clients.jedis.Tuple;
 @RequestMapping(value = "/analysis")
 public class AnalysisController {
 	public static String ANALYSISTENDER = "WEB-INF/clo/compManage/AnalysisTender";
+	public static String INITPAGE="WEB-INF/clo/monitor/hallSpector";
 	@Autowired
 	@Qualifier("analysisInfService")
 	private AnalysisInfService analysisService;
@@ -132,5 +133,16 @@ public class AnalysisController {
 	public double getFinalAmount(HttpServletRequest request,
 										  HttpServletResponse response){
 		return gameTransactionService.getFinalAmount();
+	}
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/initPage.do")
+	public String forwardToInitPage(HttpServletRequest request,
+								 HttpServletResponse response){
+		return INITPAGE;
 	}
 }
