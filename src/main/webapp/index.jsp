@@ -361,7 +361,7 @@
     }
 </style>
 <body background="" text="#FFFFFF" >
-<div style="background: url(/img/zc1.jpg); width: 1366px; height: 800px; box-shadow: none" >
+<div style="background: url(<c:url value='/img/zc1.jpg'/>); width: 1366px; height: 800px; box-shadow: none" >
     <div class="no no1" id="d1">
         <table width="306"  cellpadding="2" cellspacing="1"  id="t1">
             <tbody id="div1"> </tbody>
