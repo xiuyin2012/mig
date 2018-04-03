@@ -348,7 +348,7 @@
         //text-shadow: 5px -2px 4px #000000;
     }
     .no6{
-        left: 1084px;
+        left: 1064px;
         top: 70px;
         font: bold 18px "微软雅黑";
     }
@@ -384,7 +384,7 @@
                         if(obj<10) return "0" +""+ obj;
                         else return obj;
                     }
-                    setInterval("d6.innerHTML=new Date().getFullYear()+'/'+new Date().getMonth()+'/'+new Date().getDay()+'&nbsp'+Appendzero(new Date().getHours()) + ':' +Appendzero(new Date(). getMinutes())  ;",1000);
+                    setInterval("d6.innerHTML=new Date().getFullYear()+'/'+Appendzero( new Date().getMonth())+'/'+Appendzero(new Date().getDay())+'&nbsp'+Appendzero(new Date().getHours()) + ':' +Appendzero(new Date(). getMinutes())  ;",1000);
    </script>
 
 
