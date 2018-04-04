@@ -8,6 +8,10 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
 public class JedisPoolUtils {
 
     private static JedisPool pool;
@@ -28,9 +32,16 @@ public class JedisPoolUtils {
         config.setMaxWaitMillis(10*1000);
         // 设置空间连接
         config.setMaxIdle(10);
-
+        Context ctx = null;
+        String url = null;
+        try {
+            ctx = (Context) new InitialContext().lookup("java:comp/env");
+            url = (String) ctx.lookup("redisUrl");
+        } catch (NamingException e) {
+            e.printStackTrace();
+        }
         // 创建连接池
-        pool = new JedisPool(config, "172.18.60.119", 6379);
+        pool = new JedisPool(config, url.split(":")[0],Integer.valueOf(url.split(":")[1]));
 
     }
 
