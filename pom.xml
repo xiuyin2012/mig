@@ -131,37 +131,28 @@
       <artifactId>jsch</artifactId>
       <version>0.1.50</version>
     </dependency>
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-core-asl</artifactId>
+      <version>1.7.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-mapper-asl</artifactId>
+      <version>1.7.2</version>
+    </dependency>
   </dependencies>
   <build>
     <finalName>mig</finalName>
     <plugins>
       <plugin>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-compiler-plugin</artifactId>
-      <configuration>
-        <source>${java.source.version}</source>
-        <target>${java.target.version}</target>
-      </configuration>
-    </plugin>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.3</version>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.2</version>
         <configuration>
-          <classifier>dist</classifier>
-          <appendAssemblyId>true</appendAssemblyId>
-          <descriptorRefs>
-            <descriptor>jar-with-dependencies</descriptor>
-          </descriptorRefs>
+          <warSourceDirectory>src/main/webapp</warSourceDirectory>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+
         </configuration>
-        <executions>
-          <execution>
-            <id>make-assembly</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
