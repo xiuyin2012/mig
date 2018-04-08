@@ -11,6 +11,7 @@ import java.util.Set;
  * Created by liut on 1/31/18.
  */
 public interface GameTransactionService<T> {
+    public String  initData(String provinceD,String hallD,String gameD);
     public List<Map<String, T>> amountByPro();
     public List<Map<String,String>> ratioByGameBET();
     public List<Map<String,String>> getTotalBETbyScore();
