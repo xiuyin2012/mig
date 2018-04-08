@@ -19,7 +19,80 @@ import java.util.*;
  */
 @Service("gameTransactionService")
 public class GameTransactionServiceImp<T> implements GameTransactionService {
-    
+    public String initData(String provinceD,String hallD,String gameD){
+        Jedis jedis = JedisPoolUtils.getJedis();
+        List<Map<String,String>> proList = null;
+        List<Map<String,String>> hallList = null;
+        List<Map<String,String>> gameList = null;
+            try {
+                //get Object that load the data of txt to redis
+                DataInitial dataInitial = new DataInitial();
+                //read 1 province data 2 hall data from txt
+                proList = dataInitial.getDataFromTXT(provinceD);
+                hallList = dataInitial.getDataFromTXT(hallD);
+                gameList = dataInitial.getDataFromTXT(gameD);
+                //add to hash object of province and hall to redis
+                for (Map<String,String> proMap:proList){
+                    jedis.hset(proMap.get("proId"),"id", proMap.get("proId"));
+                    jedis.hset(proMap.get("proId").getBytes(),"name".getBytes(), proMap.get("proNm").getBytes("utf-8"));
+
+                    jedis.lpush("proList",proMap.get("proId")); //push proList
+                }
+                for (Map<String,String> hallMap:hallList){
+                    jedis.hset(hallMap.get("hallId"),"hallId", hallMap.get("hallId"));
+                    jedis.hset(hallMap.get("hallId"),"proId", hallMap.get("proId"));
+                    jedis.hset(hallMap.get("hallId").getBytes(),"hallNm".getBytes(), hallMap.get("hallNm").getBytes("utf-8"));
+                    jedis.hset(hallMap.get("hallId").getBytes(),"proNm".getBytes(), hallMap.get("proNm").getBytes("utf-8"));
+
+                    jedis.lpush("hallList",hallMap.get("hallId"));    //push hallList
+                }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+        List<String> proList2 = jedis.lrange("proList",0,-1);
+        List<String> hallList2 = jedis.lrange("hallList",0,-1);
+        for(String pro:proList2){
+            Set<String> pros = new HashSet<>();
+            Map<String,String> proMap = jedis.hgetAll(pro);
+            String hallRef = pro+"hallsSet";
+            jedis.hset(pro,"halls",hallRef);
+            for(String hall:hallList2){
+                Map<String,String> hallMap = jedis.hgetAll(hall);
+                if(pro.equals(hallMap.get("proId"))){
+                    jedis.sadd(hallRef,hallMap.get("hallId"));
+                }
+            }
+        }
+
+
+/*        construct data
+        24 	连环夺宝
+        26 	趣味高尔夫
+        25 	好运射击
+        21 	三江风光
+        11 	幸运五彩
+        12 	开心一刻
+        13 	四花选五*/
+        try {
+/*            String[] list1 = {"24","26","25","21","11","12","13"};
+            String[] list2 = {"连环夺宝","趣味高尔夫","好运射击","三江风光","幸运五彩","开心一刻","四花选五"};*/
+            for (Map<String,String> gameMap:gameList){
+                jedis.hset(("g"+gameMap.get("gameId")).getBytes(), "id".getBytes(),gameMap.get("gameId").getBytes("utf-8"));
+                jedis.hset(("g"+gameMap.get("gameNm")).getBytes(), "name".getBytes(),gameMap.get("gameNm").getBytes("utf-8"));
+            }
+/*            for (int i=0;i<7;i++) {
+                jedis.hset(("g"+list1[i]).getBytes(), "id".getBytes(), list1[i].getBytes("utf-8"));
+                jedis.hset(("g"+list1[i]).getBytes(),"name".getBytes(),list2[i].getBytes("utf-8"));
+            }*/
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        jedis.close();
+        return "1";
+        //end initData
+    }
+
     public double getFinalAmount(){
         double amount=0.0;
         Jedis jedis = JedisPoolUtils.getJedis();
