@@ -33,6 +33,9 @@ public class DataInitial<T> {
                 if(("hall").equals(simpleFileNm)){
                     getHallData(tempArray,rtnList);
                 }
+                if(("game").equals(simpleFileNm)){
+                    getGameData(tempArray,rtnList);
+                }
             }
 
 
@@ -66,5 +69,11 @@ public class DataInitial<T> {
         hallModelMap.put("hallNm",tempArray[3]);
         //hallKeyMap.put(tempArray[0],hallModelMap);
         rtnList.add((T) hallModelMap);
+    }
+    private void  getGameData(String[] tempArray,List<T> rtnList){
+        Map<String,String> gameModelMap = new HashMap<>();
+        gameModelMap.put("gameId",tempArray[0]);
+        gameModelMap.put("gameNm",tempArray[1]);
+        rtnList.add((T) gameModelMap);
     }
 }
