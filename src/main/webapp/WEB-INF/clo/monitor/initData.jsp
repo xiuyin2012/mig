@@ -31,8 +31,7 @@
                 data:{provinceD:$("#provinceD").val(),hallD:$("#hallD").val(),gameD:$("#gameD").val()},
                 dataType: "json",
                 success: function (respData) {
-
-
+                    if("1"==respData)alert("初始化成功");
                 },
                 error: function () {
                     //请求之后，响应不成功或者有错误执行
@@ -45,4 +44,3 @@
 
 </script>
 </html>
-s
