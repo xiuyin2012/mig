@@ -23,6 +23,7 @@ import redis.clients.jedis.Tuple;
 public class AnalysisController {
 	public static String ANALYSISTENDER = "WEB-INF/clo/compManage/AnalysisTender";
 	public static String INITPAGE="WEB-INF/clo/monitor/hallSpector";
+	public static String INITDATA="WEB-INF/clo/monitor/initData";
 	@Autowired
 	@Qualifier("analysisInfService")
 	private AnalysisInfService analysisService;
@@ -145,4 +146,32 @@ public class AnalysisController {
 								 HttpServletResponse response){
 		return INITPAGE;
 	}
+
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/initData.do")
+	@ResponseBody
+	public String initData(HttpServletRequest request,
+									HttpServletResponse response,String provinceD,String hallD,String gameD){
+/*		String provinceD = String.valueOf(request.getSession().getAttribute("provinceD"));
+		String hallD = String.valueOf(request.getSession().getAttribute("hallD"));
+		String gameD = String.valueOf(request.getSession().getAttribute("gameD"));*/
+		return gameTransactionService.initData(provinceD,hallD,gameD);
+	}
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/inition.do")
+	public String inition(HttpServletRequest request,
+						HttpServletResponse response){
+		return INITDATA;
+	}
+
 }
