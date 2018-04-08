@@ -21,9 +21,16 @@ import java.util.*;
 public class GameTransactionServiceImp<T> implements GameTransactionService {
     public String initData(String provinceD,String hallD,String gameD){
         Jedis jedis = JedisPoolUtils.getJedis();
+
         List<Map<String,String>> proList = null;
         List<Map<String,String>> hallList = null;
         List<Map<String,String>> gameList = null;
+        //check the swith to import
+        String importSwitch =jedis.get("importAction");
+        if(!("1").equals(importSwitch)){
+            jedis.close();
+            return "0";
+        }
             try {
                 //get Object that load the data of txt to redis
                 DataInitial dataInitial = new DataInitial();
@@ -90,6 +97,7 @@ public class GameTransactionServiceImp<T> implements GameTransactionService {
         }
         jedis.close();
         return "1";
+
         //end initData
     }
 
