@@ -32,6 +32,8 @@
                 dataType: "json",
                 success: function (respData) {
                     if("1"==respData)alert("初始化成功");
+                    else
+                        alert("初始化失败");
                 },
                 error: function () {
                     //请求之后，响应不成功或者有错误执行
