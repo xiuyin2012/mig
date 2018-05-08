@@ -125,7 +125,8 @@
                 }
             });
         }
-        $(function() {
+        //$(function() {
+        $(document).ready(function(){
             leftOne();//左一表格
             pieDataRender();//右二饼图
             barRender();//左三柱状图
