@@ -25,6 +25,8 @@
 
     <script type="text/javascript">
         //左一表格
+        var zhu_temp;
+        var plot1;
         function leftOne() {
             $.ajax({
                 type: "POST",
@@ -57,6 +59,9 @@
                 data:{},
                 dataType:"json",
                 success:function(dataResp){
+                    if(plot1){
+                        plot1.destroy();
+                    }
                     $.each(dataResp,function(index,value){
                         chartData.push([dataResp[index].name,parseFloat(dataResp[index].ratio)]);
                     });
@@ -77,6 +82,9 @@
                 data:{},
                 dataType:"json",
                 success:function(dataResp){
+                    if(zhu_temp){
+                        zhu_temp.destroy();
+                    }
                     $.each(dataResp,function(index,value){
 
                         var localArray=new Array();
@@ -102,6 +110,7 @@
                 dataType:"json",
                 success:function(dataResp){
                     data2=dataResp;
+                    rightFourRender();
                 },
                 error : function() {
                     //请求之后，响应不成功或者有错误执行
@@ -128,13 +137,13 @@
         //$(function() {
         $(document).ready(function(){
             leftOne();//左一表格
-            pieDataRender();//右二饼图
-            barRender();//左三柱状图
+            bingtu();//右二饼图
+            zhuzhuangtu();//左三柱状图
             rightFour();//右四表格
             middleData();//中间统计数据
             setInterval("leftOne()",5000);
-            setInterval("pieDataRender()",5000);
-            setInterval("barRender()",5000);
+            setInterval("bingtu()",5000);
+            setInterval("zhuzhuangtu()",5000);
             setInterval("rightFour()",5000);
             setInterval("middleData()",5000);
 
@@ -159,7 +168,7 @@
                 $trTemp1.appendTo("#div1");
             }
         }
-        $(function(){
+        function rightFourRender() {
             // 动态创建表格，使用动态创建dom对象的方式
             //清空所有的子节点
             $("#div2").empty();
@@ -173,15 +182,16 @@
                 $trTemp.append("<td width='102' align='left'>"+ data2[i].amount +"</td>");
                 $trTemp.appendTo("#div2");
             }
-        });
+        }
     </script>
 
     <script type="text/javascript" language="javascript">
         //饼图
-        $(document).ready(function(){
+        function bingtu() {
+        //$(document).ready(function(){
             var dataN=[['四花选五',3],['开心一刻',7],['幸运五彩',2.5],['三江风光',6],['好运射击',5],['趣味高尔夫',4],['连环夺宝',5]];
             //alert(dataN);
-            var  plot1 = $.jqplot('d3', [dataN], {
+              plot1 = $.jqplot('d3', [dataN], {
                 title:' ',//设置饼状图的标题
                 dataRenderer:pieDataRender,
                 grid:{
@@ -190,9 +200,9 @@
                     borderWidth: 0,           //设置图表的（最外侧）边框宽度
                     shadow: true,               // 为整个图标（最外侧）边框设置阴影，以突出其立体效果
                     shadowAngle: 45,            // 设置阴影区域的角度，从x轴顺时针方向旋转
-                    shadowOffset: 1.5,          // 设置阴影区域偏移出图片边框的距离
-                    shadowWidth: 3,             // 设置阴影区域的宽度
-                    shadowDepth: 3,             // 设置影音区域重叠阴影的数量
+                    shadowOffset: 0,          // 设置阴影区域偏移出图片边框的距离
+                    shadowWidth: 0,             // 设置阴影区域的宽度
+                    shadowDepth: 0,             // 设置影音区域重叠阴影的数量
                     shadowAlpha: 0.07           // 设置阴影区域的透明度
 
                 },
@@ -208,7 +218,7 @@
                         padding: 10,        // 饼距离其分类名称框或者图表边框的距离，变相该表饼的直径
                         sliceMargin: 0,     // 饼的每个部分之间的距离
                         fill:true,         // 设置饼的每部分被填充的状态
-                        shadow:true,       //为饼的每个部分的边框设置阴影，以突出其立体效果
+                        shadow:false,       //为饼的每个部分的边框设置阴影，以突出其立体效果
                         showMark:true, //设置是否显示刻
                     }
                 },
@@ -223,14 +233,14 @@
                 },
             });
 
-        });
+        }
 
     </script>
 
     <script type="text/javascript">
 
-        $(document).ready(function(){
-            $.jqplot('d4', [], {
+        function zhuzhuangtu() {
+             zhu_temp=$.jqplot('d4', [], {
                 title: '',
                 dataRenderer: barRender,
                 grid: {
@@ -239,7 +249,7 @@
                     gridLineColor: '#',    // 设置整个图标区域网格背景线的颜色
                     borderColor: '',     // 设置图表的(最外侧)边框的颜色
                     borderWidth: 0,           //设置图表的（最外侧）边框宽度
-                    shadow: true,               // 为整个图标（最外侧）边框设置阴影，以突出其立体效果
+                    shadow: false,               // 为整个图标（最外侧）边框设置阴影，以突出其立体效果
                 } ,
                 seriesDefaults : {
                     renderer : $.jqplot.BarRenderer, //使用柱状图表示
@@ -299,7 +309,7 @@
                     }
                 }
             });
-        });
+        }
     </script>
 </head>
 <style>
@@ -386,7 +396,8 @@
                 if(obj<10) return "0" +""+ obj;
                 else return obj;
             }
-            setInterval("d6.innerHTML=new Date().getFullYear()+'/'+Appendzero( new Date().getMonth())+'/'+Appendzero(new Date().getDay())+'&nbsp'+Appendzero(new Date().getHours()) + ':' +Appendzero(new Date(). getMinutes())  ;",1000);
+
+            setInterval("d6.innerHTML=new Date().getFullYear()+'/'+Appendzero( new Date().getMonth()+1)+'/'+Appendzero(new Date().getDate())+'&nbsp'+Appendzero(new Date().getHours()) + ':' +Appendzero(new Date(). getMinutes())  ;",1000);
         </script>
 
 
