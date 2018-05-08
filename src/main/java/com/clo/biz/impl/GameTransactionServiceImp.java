@@ -253,8 +253,8 @@ public class GameTransactionServiceImp<T> implements GameTransactionService {
             ;
             Iterable iterable;
             for (Iterator<Tuple> it = interhallsResp.get().iterator(); it.hasNext(); ) {
-                if (amount == 0.0) amount = it.next().getScore();
-                else amount+=it.next().getScore();
+                if (amount == 0.0) amount = it.next().getScore()-1;
+                else amount+=it.next().getScore()-1;
             }
             proResult.put("amount", (T) new Double(amount));
             resultList.add(proResult);
