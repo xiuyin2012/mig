@@ -19,7 +19,7 @@
 </br>
 <input type="button" id="initDataButton" value="初始化"/><br>
 <br>
-注意：游戏、大厅、省份需要配置指定linux绝对路径，文件类型是txt,一旦初始化成功以后，以免异常不要再初始化
+注意：按指定文本数据结构导入linux下的文件绝对路径,一旦初始化成功后避免异常关闭开关
 </body>
 <script type="text/javascript">
     $(document).ready(function(){
@@ -31,9 +31,10 @@
                 data:{provinceD:$("#provinceD").val(),hallD:$("#hallD").val(),gameD:$("#gameD").val()},
                 dataType: "json",
                 success: function (respData) {
+                    if("0"==respData)alert("redis初始化开关没打开");
                     if("1"==respData)alert("初始化成功");
-                    else
-                        alert("初始化失败");
+                    if("2"==respData)alert("redis connection failure");
+
                 },
                 error: function () {
                     //请求之后，响应不成功或者有错误执行
