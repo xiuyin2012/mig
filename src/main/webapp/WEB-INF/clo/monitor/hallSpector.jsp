@@ -49,7 +49,7 @@
         //右二饼图
         function pieDataRender(){
             //("右二");
-            var chartData = new Array();
+            var chartData = [{"name":"","id":"","ratio":""}];
             /*            var tempJson=[{"name":"四花选五","id":"13","ratio":"3"},{"name":"开心一刻","id":"12","ratio":"7"},
              {"name":"幸运五彩","id":"11","ratio":"2.5"},{"name":"三江风光","id":"21","ratio":"6"},
              {"name":"好运射击","id":"25","ratio":"5"},{"name":"趣味高尔夫","id":"26","ratio":"4"},
@@ -64,9 +64,12 @@
                     if(plot1){
                         plot1.destroy();
                     }
-                    $.each(dataResp,function(index,value){
-                        chartData.push([dataResp[index].name,parseFloat(dataResp[index].ratio)]);
-                    });
+                    if(null!=dataResp&&dataResp.length>0){
+                        chartData.splice(0,chartData.length);
+                        $.each(dataResp,function(index,value){
+                            chartData.push([dataResp[index].name,parseFloat(dataResp[index].ratio)]);
+                        });
+                    }
                 },
                 error : function() {
                     //请求之后，响应不成功或者有错误执行
@@ -76,7 +79,7 @@
         }
         //左三柱状图
         function barRender(){
-            var respData=new Array();
+            var respData=[{"score":"0","amount":"0"}];
             $.ajax({
                 type:"POST",
                 async:false,
@@ -87,13 +90,15 @@
                     if(zhu_temp){
                         zhu_temp.destroy();
                     }
-                    $.each(dataResp,function(index,value){
-
-                        var localArray=new Array();
-                        localArray.push(dataResp[index]["score"]);
-                        localArray.push(parseFloat(dataResp[index]["amount"]));
-                        respData.push(localArray);
-                    });
+                    if(null!=dataResp&&dataResp.length>0){
+                        respData.splice(0,respData.length);
+                        $.each(dataResp,function(index,value){
+                            var localArray=new Array();
+                            localArray.push(dataResp[index]["score"]);
+                            localArray.push(parseFloat(dataResp[index]["amount"]));
+                            respData.push(localArray);
+                        });
+                    }
                 },
                 error : function() {
                     //请求之后，响应不成功或者有错误执行
