@@ -138,11 +138,11 @@
         }
         //$(function() {
         $(document).ready(function(){
-            /*            leftOne();//左一表格
-             bingtu();//右二饼图
-             zhuzhuangtu();//左三柱状图
-             rightFour();//右四表格
-             middleData();//中间统计数据*/
+            leftOne();//左一表格
+            bingtu();//右二饼图
+            zhuzhuangtu();//左三柱状图
+            rightFour();//右四表格
+            middleData();//中间统计数据
             setInterval("leftOne()",5000);
             setInterval("bingtu()",5000);
             setInterval("zhuzhuangtu()",5000);
@@ -244,7 +244,7 @@
     <script type="text/javascript">
 
         function zhuzhuangtu() {
-            zhu_temp=$.jqplot('d4', [], {
+            zhu_temp=$.jqplot('d4', [{"score":"0","amount":"0"}], {
                 title: '',
                 dataRenderer: barRender,
                 grid: {
