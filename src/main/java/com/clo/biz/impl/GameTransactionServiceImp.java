@@ -96,7 +96,7 @@ public class GameTransactionServiceImp<T> implements GameTransactionService {
             for (ListIterator<Map<String,String>> it = gameList.listIterator();it.hasNext();){
                 Map<String,String> gameMap = it.next();
                 jedis.hset(("g"+gameMap.get("gameId")).getBytes(), "id".getBytes(),gameMap.get("gameId").getBytes("utf-8"));
-                jedis.hset(("g"+gameMap.get("gameNm")).getBytes(), "name".getBytes(),gameMap.get("gameNm").getBytes("utf-8"));
+                jedis.hset(("g"+gameMap.get("gameId")).getBytes(), "name".getBytes(),gameMap.get("gameNm").getBytes("utf-8"));
 
                 pipeline.lpush("gmList","g"+gameMap.get("gameId"));
             }
@@ -197,14 +197,17 @@ public class GameTransactionServiceImp<T> implements GameTransactionService {
         pipeline.sync();
         List<String> ratiosStr = new ArrayList<>();
         List<Map<String,String>> rtnList = new ArrayList<>();
-        double finalAmount=0.0;
-        int i=0;   //for remarking index of ratio
-        for (TwoTuple<Map<String,String>,Response<String>> gameMapAndAmountItem:gameMapAndAmount){
+        //double finalAmount=0.0;
+        for(ListIterator<TwoTuple<Map<String,String>,Response<String>>> it = gameMapAndAmount.listIterator();it.hasNext();){
+            TwoTuple<Map<String,String>,Response<String>> gameMapAndAmountItem = it.next();
+            String rationsValue = "0";
+            String rationsGet = gameMapAndAmountItem.second.get();
             Map<String,String> gameMap = gameMapAndAmountItem.first;
+
             ratiosStr.add(gameMapAndAmountItem.second.get());
-            gameMap.put("ratio",ratiosStr.get(i++));
+            if(null!=rationsGet)rationsValue = rationsGet;
+            gameMap.put("ratio",rationsValue);
             rtnList.add(gameMap);
-            //finalAmount+=Double.parseDouble(gameMapAndAmountItem.second.get());
         }
         //for(int j=0;j<rtnList.size();j++)rtnList.get(j).put("ratio",String.valueOf(Double.parseDouble(rtnList.get(j).get("ratio"))/finalAmount));
 
