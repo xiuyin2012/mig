@@ -27,6 +27,8 @@
         //左一表格
         var zhu_temp;
         var plot1;
+
+        var data=[],data2=[];
         function leftOne() {
             $.ajax({
                 type: "POST",
@@ -136,11 +138,11 @@
         }
         //$(function() {
         $(document).ready(function(){
-            leftOne();//左一表格
-            bingtu();//右二饼图
-            zhuzhuangtu();//左三柱状图
-            rightFour();//右四表格
-            middleData();//中间统计数据
+            /*            leftOne();//左一表格
+             bingtu();//右二饼图
+             zhuzhuangtu();//左三柱状图
+             rightFour();//右四表格
+             middleData();//中间统计数据*/
             setInterval("leftOne()",5000);
             setInterval("bingtu()",5000);
             setInterval("zhuzhuangtu()",5000);
@@ -151,13 +153,13 @@
     </script>
     <script type="text/javascript" language="javascript">
         //左一和右下列表
-        var data=[]
-        var data2=[]
         function leftOneRender() {
             // 动态创建表格，使用动态创建dom对象的方式
             //清空所有的子节点
             $("#div1").empty();
-            for (var i = 0; i < 10; i++) {
+            var intlen = 10;
+            if(null!=data&&data.length<10)intlen = data.length;
+            for (var i = 0; i < intlen; i++) {
                 //动态创建一个tr行标签,并且转换成jQuery对象
                 var $trTemp1 = $("<tr></tr>");
                 //往行里面追加 td单元格
@@ -172,7 +174,9 @@
             // 动态创建表格，使用动态创建dom对象的方式
             //清空所有的子节点
             $("#div2").empty();
-            for( var i = 0; i < 10; i++ ) {
+            var intlen = 10;
+            if(null!=data2&&data2.length<10)intlen = data2.length;
+            for (var i = 0; i < intlen; i++) {
                 //动态创建一个tr行标签,并且转换成jQuery对象
                 var $trTemp = $("<tr></tr>");
                 //往行里面追加 td单元格
@@ -188,10 +192,10 @@
     <script type="text/javascript" language="javascript">
         //饼图
         function bingtu() {
-        //$(document).ready(function(){
+            //$(document).ready(function(){
             var dataN=[['四花选五',3],['开心一刻',7],['幸运五彩',2.5],['三江风光',6],['好运射击',5],['趣味高尔夫',4],['连环夺宝',5]];
             //alert(dataN);
-              plot1 = $.jqplot('d3', [dataN], {
+            plot1 = $.jqplot('d3', [dataN], {
                 title:' ',//设置饼状图的标题
                 dataRenderer:pieDataRender,
                 grid:{
@@ -240,7 +244,7 @@
     <script type="text/javascript">
 
         function zhuzhuangtu() {
-             zhu_temp=$.jqplot('d4', [], {
+            zhu_temp=$.jqplot('d4', [], {
                 title: '',
                 dataRenderer: barRender,
                 grid: {
