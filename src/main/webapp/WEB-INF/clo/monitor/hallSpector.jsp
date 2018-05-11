@@ -187,7 +187,7 @@
                 //往行里面追加 td单元格
                 var localInt = i+1
                 $trTemp.append("<td width='62'  align='left'>"+ localInt +"</td>");
-                $trTemp.append("<td width='137px' align='left' class='ellipsis_div' title='"+data2[i].hallNm+"'>"+ data2[i].hallNm +"</td>");
+                $trTemp.append("<td width='137' align='left' class='ellipsis_div' title='"+data2[i].hallNm+"'>"+ data2[i].hallNm +"</td>");
                 $trTemp.append("<td width='102' align='left'>"+ data2[i].amount +"</td>");
                 $trTemp.appendTo("#div2");
             }
@@ -228,7 +228,7 @@
                         sliceMargin: 0,     // 饼的每个部分之间的距离
                         fill:true,         // 设置饼的每部分被填充的状态
                         shadow:false,       //为饼的每个部分的边框设置阴影，以突出其立体效果
-                        showMark:true, //设置是否显示刻
+                        showMark:true //设置是否显示刻
                     }
                 },
                 legend:{
@@ -238,7 +238,7 @@
                     xoffset: 10,        // 分类名称框距图表区域上边框的距离（单位px）
                     yoffset: 30,        // 分类名称框距图表区域左边框的距离(单位px)
                     background:'rgba(0,0,0,0)',//分类名称框距图表区域背景色
-                    textColor:'FFFFFF', //分类名称框距图表区域内字体颜色
+                    textColor:'FFFFFF' //分类名称框距图表区域内字体颜色
                 },
             });
 
@@ -258,7 +258,7 @@
                     gridLineColor: '#',    // 设置整个图标区域网格背景线的颜色
                     borderColor: '',     // 设置图表的(最外侧)边框的颜色
                     borderWidth: 0,           //设置图表的（最外侧）边框宽度
-                    shadow: false,               // 为整个图标（最外侧）边框设置阴影，以突出其立体效果
+                    shadow: false               // 为整个图标（最外侧）边框设置阴影，以突出其立体效果
                 } ,
                 seriesDefaults : {
                     renderer : $.jqplot.BarRenderer, //使用柱状图表示
@@ -309,7 +309,7 @@
                 axes: {
                     xaxis: {
                         renderer: $.jqplot.CategoryAxisRenderer, //x轴绘制方式
-                        labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                        labelRenderer: $.jqplot.CanvasAxisLabelRenderer
                     },
                     yaxis: {
                         //min: 0,           //y轴最小值
@@ -373,11 +373,11 @@
         font: bold 18px "微软雅黑";
     }
     .ellipsis_div{
-        max-width:1px;
+        max-width:137px;
         overflow:hidden;
         text-overflow:ellipsis;
         white-space:nowrap;
-
+        -o-text-overflow: ellipsis; /* for Opera */
     }
 </style>
 <body background="" text="#FFFFFF" >
