@@ -1,5 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF8"%>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE HTML>
 
 <html>
 <head>
@@ -320,66 +320,67 @@
             });
         }
     </script>
+    <style>
+        * { padding: 0; margin: 0; }
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            border: 0px solid #ffffff;
+        }
+        th,td {
+            border: 0px solid #ffffff;
+        //color: #404060;
+            padding: 1px;//表格上下间距
+        width:92px;
+        }
+        th {
+            background-color: #ffffff;
+            font: bold 12px "微软雅黑";
+            color: #ffffff;
+        }
+        td {
+            font: 12px "微软雅黑";
+        }
+        tbody tr {
+        //background-color: #ffffff;
+        }
+        tbody tr:hover {
+            cursor: pointer;
+        // background-color: #fafafa;
+        }
+        .no{
+            position: absolute;
+            width: 283px;
+            height: 4px;
+        }
+        .no1{
+            left: 114px;
+            top: 209px;
+        }
+        .no2{
+            left: 989px;
+            top: 552px;
+        }
+        .no3{	left: 943px;	top: 161px		}
+        .no4{	left: 85px;	top: 509px}
+        .no5{	left: 547px;	top: 415px ;font: bold 36px "微软雅黑";color: #ffff00;
+        //text-shadow: 5px -2px 4px #000000;
+        }
+        .no6{
+            left: 1064px;
+            top: 70px;
+            font: bold 18px "微软雅黑";
+        }
+        .ellipsis_div{
+            max-width:137px;
+            overflow:hidden;
+            text-overflow:ellipsis;
+            white-space:nowrap;
+            -o-text-overflow: ellipsis; /* for Opera */
+        }
+    </style>
 </head>
-<style>
-    * { padding: 0; margin: 0; }
-    table {
-        border-collapse: collapse;
-        border-spacing: 0;
-        border: 0px solid #ffffff;
-    }
-    th,td {
-        border: 0px solid #ffffff;
-    //color: #404060;
-        padding: 1px;//表格上下间距
-    width:92px;
-    }
-    th {
-        background-color: #ffffff;
-        font: bold 12px "微软雅黑";
-        color: #ffffff;
-    }
-    td {
-        font: 12px "微软雅黑";
-    }
-    tbody tr {
-    //background-color: #ffffff;
-    }
-    tbody tr:hover {
-        cursor: pointer;
-    // background-color: #fafafa;
-    }
-    .no{
-        position: absolute;
-        width: 283px;
-        height: 4px;
-    }
-    .no1{
-        left: 114px;
-        top: 209px;
-    }
-    .no2{
-        left: 989px;
-        top: 552px;
-    }
-    .no3{	left: 943px;	top: 161px		}
-    .no4{	left: 85px;	top: 509px}
-    .no5{	left: 547px;	top: 415px ;font: bold 36px "微软雅黑";color: #ffff00;
-    //text-shadow: 5px -2px 4px #000000;
-    }
-    .no6{
-        left: 1064px;
-        top: 70px;
-        font: bold 18px "微软雅黑";
-    }
-    .ellipsis_div{
-        max-width:137px;
-        overflow:hidden;
-        text-overflow:ellipsis;
-        white-space:nowrap;
-        -o-text-overflow: ellipsis; /* for Opera */
-    }
-</style>
+
 <body background="" text="#FFFFFF" >
 <frame name="menu" src="<c:url value='/pages/menuTmp.jsp'/>" />
 <div style="background: url(<c:url value='/img/zc1.jpg'/>); width: 1366px; height: 800px; box-shadow: none" >

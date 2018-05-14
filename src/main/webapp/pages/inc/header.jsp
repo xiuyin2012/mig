@@ -114,5 +114,6 @@ height:55px;
 
 .searchBtnDouble{
 	display:inline;
-} -->
+}
     </style>
+-->
