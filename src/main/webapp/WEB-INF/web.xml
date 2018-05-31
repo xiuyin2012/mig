@@ -31,7 +31,7 @@
         </servlet-mapping> -->
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
-        <url-pattern>*.do</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
 
 
@@ -68,10 +68,6 @@
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>*.png</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>*.jsp</url-pattern>
     </servlet-mapping>
 
     <!-- 	<resource-ref>
