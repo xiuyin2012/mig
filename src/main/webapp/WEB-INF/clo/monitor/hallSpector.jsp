@@ -50,9 +50,18 @@
             cursor: pointer;
         // background-color: #fafafa;
         }
+
+        body {
+
+            /* 加载背景图 */
+
+            background-image: url(<c:url value='/img/star.jpg'/>);
+
+        }
+
         .no{
             position: absolute;
-            width: 283px;
+            width:283px;
             height: 4px;
         }
         .no1{
@@ -66,6 +75,7 @@
         .no3{	left: 943px;	top: 161px		}
         .no4{	left: 85px;	top: 509px}
         .no5{	left: 547px;	top: 415px ;font: bold 36px "微软雅黑";color: #ffff00;
+        //text-shadow: 5px -2px 4px #000000;
         //text-shadow: 5px -2px 4px #000000;
         }
         .no6{
@@ -85,8 +95,15 @@
         //左一表格
         var zhu_temp;
         var plot1;
-
         var data=[],data2=[];
+        var screenVarWidth = 1920;
+        var screenVarHeight = 1080;
+
+        var leftRatio = Math.floor(screenVarWidth*10000/1366)/10000;
+        var topRatio = Math.floor(screenVarHeight*10000/800)/10000;
+
+
+
         function leftOne() {
             $.ajax({
                 type: "POST",
@@ -100,6 +117,7 @@
                 },
                 error: function () {
                     //请求之后，响应不成功或者有错误执行
+                    leftOneRender();
                 }
             });
         }
@@ -119,6 +137,10 @@
                 data:{},
                 dataType:"json",
                 success:function(dataResp){
+                    /*                    var tempJson=[{"name":"四花选五","id":"13","ratio":"3"},{"name":"开心一刻","id":"12","ratio":"7"},
+                     {"name":"幸运五彩","id":"11","ratio":"2.5"},{"name":"三江风光","id":"21","ratio":"6"},
+                     {"name":"好运射击","id":"25","ratio":"5"},{"name":"趣味高尔夫","id":"26","ratio":"4"},
+                     {"name":"连环夺宝","id":"24","ratio":"5"}];*/
                     if(plot1){
                         plot1.destroy();
                     }
@@ -131,13 +153,31 @@
                 },
                 error : function() {
                     //请求之后，响应不成功或者有错误执行
-                }
-            });
+                    var tempJson=[{"name":"四花选五","id":"13","ratio":"3"},{"name":"开心一刻","id":"12","ratio":"7"},
+                        {"name":"幸运五彩","id":"11","ratio":"2.5"},{"name":"三江风光","id":"21","ratio":"6"},
+                        {"name":"好运射击","id":"25","ratio":"5"},{"name":"趣味高尔夫","id":"26","ratio":"4"},
+                        {"name":"连环夺宝","id":"24","ratio":"5"}];
+                    /*                    if(null!=tempJson&&tempJson.length>0){
+                     chartData.splice(0,chartData.length);
+                     $.each(tempJson,function(index,value){
+                     chartData.push([tempJson[index].name,parseFloat(tempJson[index].ratio)]);
+                     });
+                     }
+                     }*/
+                });
             return [chartData];
         }
         //左三柱状图
         function barRender(){
-            var respData=[{"score":"0","amount":"0"}];
+
+            var respData= new Array();
+            for(j=1;j<21;j++){
+                var tempArray = new Array();
+                tempArray.push((j*10).toString());
+                tempArray.push(0);
+                respData.push(tempArray);
+            }
+            //var testData = [{"score":"30","amount":"30"},{"score":"10","amount":"50"},{"score":"20","amount":"20"}];
             $.ajax({
                 type:"POST",
                 async:false,
@@ -159,6 +199,16 @@
                     }
                 },
                 error : function() {
+                    /*                   if(null!=testData&&testData.length>0){
+                     //respData.splice(0,respData.length);
+                     $.each(testData,function(index,value){
+                     for(i=0;i<respData.length;i++){
+                     if(respData[i][0]==testData[index]["score"]){
+                     respData[i][1]=parseFloat(testData[index]["amount"]);
+                     }
+                     }
+                     });
+                     }*/
                     //请求之后，响应不成功或者有错误执行
                 }
             });
@@ -179,6 +229,7 @@
                 },
                 error : function() {
                     //请求之后，响应不成功或者有错误执行
+                    rightFourRender();
                 }
             });
         }
@@ -193,14 +244,31 @@
                 success:function(dataResp2){
                     //$("#d5").html("<font size='6' color='yellow'>"+dataResp2+"元</font>");
                     $("#d5").html(dataResp2+"元");
+
                 },
                 error : function() {
                     //请求之后，响应不成功或者有错误执行
+                    // $("#d5").html(18500+"元");
                 }
             });
         }
         //$(function() {
+        //width,height ratio
         $(document).ready(function(){
+            //rendor entirelys
+
+            if($("#screenX").val()==1920&&$("#screenY").val()==1080){
+                /*                $("#total").css("background");
+                 $("#total").css("width","1920px");
+                 $("#total").css("height","1080px");*/
+                $(".no1").css("left","190px");
+                $(".no2").css("left","1070px");
+                $(".no3").css("left","1010px");
+                $(".no5").css("left","620px");
+                $(".no4").css("left","150px");
+                $(".no4").css("top","500px");
+            }
+
             leftOne();//左一表格
             bingtu();//右二饼图
             zhuzhuangtu();//左三柱状图
@@ -221,6 +289,7 @@
             //清空所有的子节点
             $("#div1").empty();
             var intlen = 10;
+            //data=[{"name":"beijing","amount":1900},{"name":"shanghai","amount":1500}];
             if(null!=data&&data.length<10)intlen = data.length;
             for (var i = 0; i < intlen; i++) {
                 //动态创建一个tr行标签,并且转换成jQuery对象
@@ -231,11 +300,13 @@
                 $trTemp1.append("<td width='107' align='left'>" + data[i].name + "</td>");
                 $trTemp1.append("<td width='102' align='left'>" + data[i].amount + "</td>");
                 $trTemp1.appendTo("#div1");
+                //data=[{"name":beijing,"amount":1900},{"name":shanghai,"amount":1500}];
             }
         }
         function rightFourRender() {
             // 动态创建表格，使用动态创建dom对象的方式
             //清空所有的子节点
+            //data2=[{"hallNm":"beijing","amount":1900},{"hallNm":"shanghai","amount":1500}];
             $("#div2").empty();
             var intlen = 10;
             if(null!=data2&&data2.length<10)intlen = data2.length;
@@ -381,38 +452,44 @@
 
 </head>
 
-<body background="" text="#FFFFFF" >
-<frame name="menu" src="<c:url value='/pages/menuTmp.jsp'/>" />
-<div style="background: url(<c:url value='/img/zc1.jpg'/>); width: 1366px; height: 800px; box-shadow: none" >
-    <div class="no no1" id="d1">
-        <table width="306"  cellpadding="2" cellspacing="1"  id="t1">
-            <tbody id="div1"> </tbody>
-        </table>
+<body background="" text="#FFFFFF">
+<center>
+    <frame name="menu" src="<c:url value='/pages/menuTmp.jsp'/>" />
+    <div id="total" style="background: url(<c:url value='/img/zc1.jpg'/>);top: 0px; bottom: 0px; width: 1366px; height: 800px; box-shadow: none;background-size:cover;" >
+        <div class="no no1" id="d1">
+            <table width="306"  cellpadding="2" cellspacing="1"  id="t1">
+                <tbody id="div1"> </tbody>
+            </table>
+        </div>
+        <div class="no no2" id="d2">
+            <table  width="306" cellspacing="1" cellpadding="2"  id="t2">
+                <tbody id="div2"> </tbody>
+            </table>
+        </div>
+        <div  class="no no3" id="d3" style="margin-top: 20px; margin-left: 20px; width: 320px; height: 220px; ">     </div>
+        <div  class="no no4" id="d4" style="margin-top: 20px; margin-left: 20px; width: 347px; height: 238px;">    </div>
+        <div align="center"><span class="no no5" id="d5"></span></div>
+        <div  class="no no6" id="d6" style="margin-top: 20px; margin-left: 20px; width: 320px; height: 220px; ">
+
+
+            <script>
+                function Appendzero(obj)
+                {
+                    if(obj<10) return "0" +""+ obj;
+                    else return obj;
+                }
+
+                setInterval("d6.innerHTML=new Date().getFullYear()+'/'+Appendzero( new Date().getMonth()+1)+'/'+Appendzero(new Date().getDate())+'&nbsp'+Appendzero(new Date().getHours()) + ':' +Appendzero(new Date(). getMinutes())  ;",1000);
+            </script>
+
+
+
+        </div>
     </div>
-    <div class="no no2" id="d2">
-        <table  width="306" cellspacing="1" cellpadding="2"  id="t2">
-            <tbody id="div2"> </tbody>
-        </table>
-    </div>
-    <div  class="no no3" id="d3" style="margin-top: 20px; margin-left: 20px; width: 320px; height: 220px; ">     </div>
-    <div  class="no no4" id="d4" style="margin-top: 20px; margin-left: 20px; width: 347px; height: 238px;">    </div>
-    <div align="center"><span class="no no5" id="d5"></span></div>
-    <div  class="no no6" id="d6" style="margin-top: 20px; margin-left: 20px; width: 320px; height: 220px; ">
-
-
-        <script>
-            function Appendzero(obj)
-            {
-                if(obj<10) return "0" +""+ obj;
-                else return obj;
-            }
-
-            setInterval("d6.innerHTML=new Date().getFullYear()+'/'+Appendzero( new Date().getMonth()+1)+'/'+Appendzero(new Date().getDate())+'&nbsp'+Appendzero(new Date().getHours()) + ':' +Appendzero(new Date(). getMinutes())  ;",1000);
-        </script>
-
-
-
-    </div>
-</div>
+</center>
+<form>
+    <input type="hidden" name="screenX" id="screenX" value="<c:out value='${screenX }'/>"/>
+    <input type="hidden" name="screenY" id="screenY" value="<c:out value='${screenY }'/>"/>
+</form>
 </body>
 </html>
