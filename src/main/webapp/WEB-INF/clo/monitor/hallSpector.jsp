@@ -157,26 +157,25 @@
                         {"name":"幸运五彩","id":"11","ratio":"2.5"},{"name":"三江风光","id":"21","ratio":"6"},
                         {"name":"好运射击","id":"25","ratio":"5"},{"name":"趣味高尔夫","id":"26","ratio":"4"},
                         {"name":"连环夺宝","id":"24","ratio":"5"}];
-                    /*                    if(null!=tempJson&&tempJson.length>0){
+                    /*                                        if(null!=tempJson&&tempJson.length>0){
                      chartData.splice(0,chartData.length);
                      $.each(tempJson,function(index,value){
                      chartData.push([tempJson[index].name,parseFloat(tempJson[index].ratio)]);
                      });
-                     }
                      }*/
-                });
+                }
+            });
             return [chartData];
         }
         //左三柱状图
+        var respData= new Array();
+        for(j=1;j<21;j++){
+            var tempArray = new Array();
+            tempArray.push((j*10).toString());
+            tempArray.push(0);
+            respData.push(tempArray);
+        }
         function barRender(){
-
-            var respData= new Array();
-            for(j=1;j<21;j++){
-                var tempArray = new Array();
-                tempArray.push((j*10).toString());
-                tempArray.push(0);
-                respData.push(tempArray);
-            }
             //var testData = [{"score":"30","amount":"30"},{"score":"10","amount":"50"},{"score":"20","amount":"20"}];
             $.ajax({
                 type:"POST",
@@ -188,13 +187,17 @@
                     if(zhu_temp){
                         zhu_temp.destroy();
                     }
+                    for(o=0;o<20;o++){
+                        respData[o][1]=0;
+                    }
                     if(null!=dataResp&&dataResp.length>0){
-                        respData.splice(0,respData.length);
+                        //respData.splice(0,respData.length);
                         $.each(dataResp,function(index,value){
-                            var localArray=new Array();
-                            localArray.push(dataResp[index]["score"]);
-                            localArray.push(parseFloat(dataResp[index]["amount"]));
-                            respData.push(localArray);
+                            for(i=0;i<respData.length;i++){
+                                if(respData[i][0]==dataResp[index]["score"]){
+                                    respData[i][1]=parseFloat(dataResp[index]["amount"]);
+                                }
+                            }
                         });
                     }
                 },
@@ -274,11 +277,11 @@
             zhuzhuangtu();//左三柱状图
             rightFour();//右四表格
             middleData();//中间统计数据
-            setInterval("leftOne()",5000);
-            setInterval("bingtu()",5000);
-            setInterval("zhuzhuangtu()",5000);
-            setInterval("rightFour()",5000);
-            setInterval("middleData()",5000);
+            setInterval("leftOne()",4000);
+            setInterval("bingtu()",4000);
+            setInterval("zhuzhuangtu()",4000);
+            setInterval("rightFour()",4000);
+            setInterval("middleData()",4000);
 
         });
     </script>
